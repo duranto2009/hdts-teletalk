@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_query_user" value="name:id;datatype:int,name:username;datatype:string,name:user_email;datatype:string,name:phone;datatype:int,name:password;datatype:string,name:full_name;datatype:string,name:skill_id;datatype:string,name:unit;datatype:int,name:department;datatype:string" />
+</info>

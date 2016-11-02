@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_query_slave" value="name:id;datatype:int,name:ms_code;datatype:int,name:ss_name;datatype:string,name:ss_code;datatype:int" />
+</info>

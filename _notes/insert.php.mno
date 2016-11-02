@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_query_user" value="name:id;datatype:int,name:username;datatype:string,name:ticket_id;datatype:string,name:unicode;datatype:string,name:spoc;datatype:string,name:date;datatype:datetime" />
+</info>

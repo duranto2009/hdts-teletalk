@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_notification" value="name:id;datatype:int,name:username;datatype:string,name:ticket_id;datatype:string,name:spoc;datatype:string,name:date;datatype:datetime,name:viewed;datatype:int,name:assign_date;datatype:date,name:viewed_date;datatype:date" />
+	<infoitem key="UD_search_ticket" value="name:id;datatype:int,name:subject;datatype:string,name:customer_no;datatype:int,name:ticket_id;datatype:string,name:start_date;datatype:datetime,name:status;datatype:int,name:skill_id;datatype:string" />
+</info>

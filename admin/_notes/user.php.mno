@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_query_table" value="name:id;datatype:int,name:username;datatype:string,name:user_email;datatype:string,name:phone;datatype:int,name:password;datatype:string,name:full_name;datatype:string,name:skill_id;datatype:string,name:unit;datatype:int,name:department;datatype:string" />
+	<infoitem key="UD_user" value="name:id;datatype:int,name:username;datatype:string,name:user_email;datatype:string,name:phone;datatype:int,name:password;datatype:string,name:full_name;datatype:string,name:skill_id;datatype:string,name:unit;datatype:int,name:department;datatype:string" />
+	<infoitem key="UD_closed" value="name:id;datatype:int,name:ticket_id;datatype:string,name:skill_id;datatype:string,name:start_date;datatype:datetime,name:close_date;datatype:datetime,name:customer_no;datatype:int,name:subject;datatype:string,name:prob_desc;datatype:blob,name:status;datatype:int,name:agent_id;datatype:string" />
+	<infoitem key="UD_department" value="name:id;datatype:int,name:skill_id;datatype:int,name:department;datatype:string" />
+</info>
