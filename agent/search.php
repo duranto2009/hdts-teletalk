@@ -81,7 +81,7 @@ $totalRows_progress = $progress->num_rows;
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#">Profile</a>
+                                        <a tabindex="-1" href="profile.php">Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li>
