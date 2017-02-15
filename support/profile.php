@@ -131,8 +131,8 @@ include '../scripts/islogin.php';
 include '../scripts/Connection/connection.php';
 
 if (isset($_SESSION['username'])) {
-		if ($_SESSION['unit'] != 2){
-		echo $_SESSION['unit'];
+		if ($_SESSION['unit'] != 3){
+		//echo $_SESSION['unit'];
 		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
 	}
 }
