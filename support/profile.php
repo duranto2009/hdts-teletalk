@@ -1,142 +1,60 @@
-<?php 
-
-require '../Connections/conn.php';
-if (!function_exists("GetSQLValueString")) {
-    function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-    {
-      if (PHP_VERSION < 6) {
-        $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-      }
-
-      //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-      switch ($theType) {
-        case "text":
-          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-          break;    
-        case "long":
-        case "int":
-          $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-          break;
-        case "double":
-          $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-          break;
-        case "date":
-          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-          break;
-        case "defined":
-          $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-          break;
-      }
-      return $theValue;
-    }
-  }
-
-//mysql_select_db($database_conn, $conn);
-$query_g_1 = "SELECT * FROM ticket WHERE skill_id = '201' AND status != 2";
-$g_1 =  $conn->query($query_g_1) or die(mysql_error());
-$row_g_1 = $g_1->fetch_assoc();
-$totalRows_g_1 = $g_1->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_g_1_closed = "SELECT * FROM ticket WHERE skill_id = '201' AND status = 2";
-$g_1_closed =  $conn->query($query_g_1_closed) or die(mysql_error());
-$row_g_1_closed = $g_1_closed->fetch_assoc();
-$totalRows_g_1_closed = $g_1_closed->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_g_2 = "SELECT * FROM ticket WHERE skill_id = '202' AND status != 2";
-$g_2 = $conn->query($query_g_2) or die(mysql_error());
-$row_g_2 = $g_2->fetch_assoc();
-$totalRows_g_2 = $g_2->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_g_2_closed = "SELECT * FROM ticket WHERE skill_id = '202' AND status = 2";
-$g_2_closed =  $conn->query($query_g_2_closed) or die(mysql_error());
-$row_g_2_closed = $g_2_closed->fetch_assoc();
-$totalRows_g_2_closed = $g_2_closed->num_rows;
-
-
-
-//mysql_select_db($database_conn, $conn);
-$query_g_3 = "SELECT * FROM ticket WHERE skill_id = '203' AND status != 2";
-$g_3 =  $conn->query($query_g_3) or die(mysql_error());
-$row_g_3 = $g_3->fetch_assoc();
-$totalRows_g_3 = $g_3->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_g_3_closed = "SELECT * FROM ticket WHERE skill_id = '203' AND status = 2";
-$g_3_closed = $conn->query($query_g_3_closed) or die(mysql_error());
-$row_g_3_closed = $g_3_closed->fetch_assoc();
-$totalRows_g_3_closed = $g_3_closed->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_g_4 = "SELECT * FROM ticket WHERE skill_id = '204' AND status != 2";
-$g_4 =  $conn->query($query_g_4) or die(mysql_error());
-$row_g_4 = $g_4->fetch_assoc();
-$totalRows_g_4 = $g_4->num_rows;
-
-
-//mysql_select_db($database_conn, $conn);
-$query_g_4_closed = "SELECT * FROM ticket WHERE skill_id = '204' AND status = 2";
-$g_4_closed = $conn->query($query_g_4_closed) or die(mysql_error());
-$row_g_4_closed = $g_4_closed->fetch_assoc();
-$totalRows_g_4_closed = $g_4_closed->num_rows;
-
-
-
-$colname_dept = "-1";
-if (isset($_GET['skill'])) {
-  $colname_dept = $_GET['skill'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_dept = sprintf("SELECT * FROM ticket WHERE skill_id = %s AND status != 2", GetSQLValueString($colname_dept, "text"));
-$dept = $conn->query($query_dept) or die(mysql_error());
-$row_dept = $dept->fetch_assoc();
-$totalRows_dept = $dept->num_rows;
-
-
-
-$colname_dept_closed = "-1";
-if (isset($_GET['skill'])) {
-  $colname_dept_closed = $_GET['skill'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_dept_closed = sprintf("SELECT * FROM ticket WHERE skill_id = %s AND status = 2", GetSQLValueString($colname_dept_closed, "text"));
-$dept_closed = $conn->query($query_dept_closed) or die(mysql_error());
-$row_dept_closed = $dept_closed->fetch_assoc();
-$totalRows_dept_closed = $dept_closed->num_rows;
-
-
-$colname_gruop_name = "-1";
-if (isset($_GET['skill'])) {
-  $colname_gruop_name = $_GET['skill'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_gruop_name = sprintf("SELECT * FROM dept_groups WHERE skill_id = %s", GetSQLValueString($colname_gruop_name, "text"));
-$gruop_name = $conn->query($query_gruop_name) or die(mysql_error());
-$row_gruop_name = $gruop_name->fetch_assoc();
-$totalRows_gruop_name = $gruop_name->num_rows;
-
-
-?>
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 
 if (isset($_SESSION['username'])) {
 		if ($_SESSION['unit'] != 3){
-		//echo $_SESSION['unit'];
+		echo $_SESSION['unit'];
 		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
 	}
 }
-include "getmessage.php";	
+
+
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+
+  $uname = $_SESSION['username'];
+  //mysql_select_db($database_conn, $conn);
+  $query_notification = "SELECT * FROM assignee WHERE username = '$uname' AND viewed=0 ORDER BY date DESC";
+  $notification =  $conn->query($query_notification) or die(mysql_error());
+  $row_notification = $notification->fetch_assoc();
+  $totalRows_notification = $notification->num_rows;
+
+  //mysql_select_db($database_conn, $conn);
+  $query_search_ticket = "SELECT ticket.id, ticket.subject, ticket.customer_no, ticket.ticket_id, ticket.start_date, ticket.status, ticket.skill_id FROM ticket INNER JOIN assignee ON assignee.ticket_id = ticket.ticket_id WHERE assignee.username = '$uname' AND assignee.viewed = 1 AND ticket.status != 2";
+
+  $search_ticket =  $conn->query($query_search_ticket) or die(mysql_error());
+  $row_search_ticket = $search_ticket->fetch_assoc();
+  $totalRows_search_ticket = $search_ticket->num_rows;
 ?>
 <!DOCTYPE html>
 <html>
@@ -149,16 +67,9 @@ include "getmessage.php";
         <link href="../assets/styles.css" rel="stylesheet" media="screen">
         <link href="../assets/DT_bootstrap.css" rel="stylesheet" media="screen">
         <script src="../vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-        
-        <style>
-            body{
-                overflow:hidden;
-            }
-        </style>
     </head>
     
     <body>
-<!--NAVIGATION STARTS HERE-->        
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
@@ -166,34 +77,32 @@ include "getmessage.php";
                      <span class="icon-bar"></span>
                      <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="index.php?skill=<?php echo $_SESSION['skill']; ?>">TELETALK</a>
+                    <a class="brand" href="#">TELETALK</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
                         	<li class="dropdown">
                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" id="notification"> 
                                 <i class="icon-flag"></i>
-                                <sup class="label label-warning"><?php echo $result_message->num_rows ?></sup>
+                                <sup class="label label-warning"><?php echo $totalRows_notification ?></sup>
                                 </a>
                                 
                               <ul class="dropdown-menu" style="width:300px; padding:20px; maxheight:70vh; overflow:scroll">
                                     <?php 
+									if ($totalRows_notification==0) {
+										echo "<p style='text-align:center'>No Notification</p>";
+									} else
 									do { ?>
                                     <li>
-                                        <a <?php if ($row_message2['viewed']==1) {echo "class='inactive'";}?>href="../scripts/update_message.php?_t=<?php echo $row_message2['ticket_id']."&skill=".$row_message2['skill_id']."&ins=".$row_message2['instance'].""; ?>">
-                                          Ticket ID# <span style="color:#3C443E; font-weight:bold"><?php echo $row_message2['ticket_id'] ?></span>
-                                          <br><?php echo "has got a recheck request from <span style='color:blue'>".$row_message2['username']. "</span>"; ?>
+                                        <a href="../scripts/update_notification.php?_t=<?php echo $row_notification['ticket_id']; ?>">
+                                          Ticket ID# <span style="color:#3C443E; font-weight:bold"><?php echo $row_notification['ticket_id']; ?></span>
+                                          <br> has been assigned to you.
                                           
-                                          <p style="text-align:right; font-style:italic; size:8px"> on <span style="font-weight:bold">
-										  <?php echo $row_message2['time'] ?></span></p>
-                                          <?php
-                                          if ($row_message2['viewed']==1){
-										 	echo "<underline>Viewed by ".$row_message2['viewed_by']." on ".$row_message2['viewed_time']." </underline>";
-										  }
-                                          
-										  ?>
-										</a>
+                                          <p style="text-align:right; font-style:italic; size:8px">by -- <span style="color:#F63; font-weight:bold">
+										  <?php echo $row_notification['spoc']; ?></span> on <span style="font-weight:bold">
+										  <?php echo $row_notification['date']; ?></span></p>
+                                        </a>
                                         </li><hr>
-                                      <?php } while ($row_message2 = $result_message2->fetch_assoc()); ?>
+                                      <?php } while ($row_notification = $notification->fetch_assoc()); ?>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -209,23 +118,13 @@ include "getmessage.php";
                                 </ul>
                             </li>
                         </ul>
-                        <ul class="nav">
-                            <li class="active">
-                                <a href="index.php?skill=<?php echo $_SESSION['skill']; ?>">Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="mydepartment.php?skill=<?php echo $_SESSION['skill']; ?>">My Group
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <!--/.nav-collapse -->
                 </div>
             </div>
         </div>
-<!--NAVIGATION ENDAS HERE-->
-
-
+        
+        
 <!--Update Password-->
 
 <?php
@@ -327,9 +226,13 @@ include "getmessage.php";
         
         
  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <footer>
-            <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
-        </footer>
+        
+        
+        
+            <footer>
+                <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
+            </footer>
+        </div>
         <!--/.fluid-container-->
 
         <script src="../vendors/jquery-1.9.1.js"></script>
@@ -338,4 +241,5 @@ include "getmessage.php";
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
     </body>
+
 </html>
