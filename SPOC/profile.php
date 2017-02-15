@@ -149,9 +149,16 @@ include "getmessage.php";
         <link href="../assets/styles.css" rel="stylesheet" media="screen">
         <link href="../assets/DT_bootstrap.css" rel="stylesheet" media="screen">
         <script src="../vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        
+        <style>
+            body{
+                overflow:hidden;
+            }
+        </style>
     </head>
     
     <body>
+<!--NAVIGATION STARTS HERE-->        
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
@@ -216,222 +223,113 @@ include "getmessage.php";
                 </div>
             </div>
         </div>
-        <div class="container-fluid">
-    <div class="row-fluid">
-                <div class="span3" id="sidebar">
-                    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-                        <li class="active">
-                            <a href="index.php?skill=<?php echo $_SESSION['skill']; ?>"> Dashboard</a>
-                        </li>
-                        
-                        <li>
-                            <a href="mydepartment.php?skill=<?php echo $_SESSION['skill']; ?>"> My Group</a>
-                        </li>
-                    </ul>    
+<!--NAVIGATION ENDAS HERE-->
+
+
+<!--Update Password-->
+
+<?php
+    if (isset($_POST['update_pass'])) {
+        // code...
+        $user=$_SESSION['username'];
+        $password=$_POST['password'];
+        $confirm_password=$_POST['confirm_password'];
+        
+        if ($password==$confirm_password) {
+            // code...
+            $update="UPDATE user SET password='$password' WHERE username='$user'";
+            $update_execute=$conn->query($update);
+            if ($update_execute==TRUE) {
+                // code...
+                header('location:profile.php?success');
+            }
+            else{
+                // code...
+                header('location:profile.php?error');
+            }
+        }
+        else{
+            header('location:profile.php?pass_mismatch');
+        }
+        
+
+    }
+
+?>
+
+    <!--CONFIRMATIONs-->
+        <div class="container">
+            <div class="row">
+                <div class="span4">
                 </div>
-                <!--/span-->
-                <div class="span9" id="content">
-                     <div class="row-fluid">
-                        <!-- block -->
-                        <div class="block">
-                            <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Tickets Status View</div>
-                            </div>
-                            <div class="block-content collapse in">
-                                <div class="span12">
-                                   <div class="span4">
-                                   		<div class="bs-docs-sidenav" style="padding:20px; background:#F3F3F3">
-                                        <h4 align="center"><?php echo $row_gruop_name['short_name']; ?></h4>
-                                        	<table cellpadding="5px">
-                                            	<tr>
-                                                	<td>
-                                                    <a href="ticket_view.php?skill=<?php echo $_SESSION['skill']; ?>">
-                                                    <i class="icon-tasks"></i> Total New/Open Tickets</a>
-                                                    </td>
-                                                    <td>
-                                                    <span class="badge badge-info pull-right">
-													<?php echo $totalRows_dept ?>
-                                                    </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                	<td>
-                                                	<a href="ct.php?skill=<?php echo $_SESSION['skill']; ?>">
-                                                	<i class="icon-tasks"></i> Total Closed Tickets
-                                                    </a>
-                                                    </td>
-                                                    <td>
-													<span class="badge badge-warning pull-right">
-													<?php echo $totalRows_dept_closed ?>
-                                                    </span>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                     </div>
-                                   </div>
-                                            <?php
-												if(isset($_SESSION['username'])){
-													$user = $_SESSION['username'];
-													$g_201 = "SELECT * FROM g_201 WHERE username = '$user'";
-													$g_202 = "SELECT * FROM g_202 WHERE username = '$user'";
-													$g_203 = "SELECT * FROM g_203 WHERE username = '$user'";
-													$g_204 = "SELECT * FROM g_204 WHERE username = '$user'";
-													$result1 = $conn->query($g_201);
-													$result2 = $conn->query($g_202);
-													$result3 = $conn->query($g_203);
-													$result4 = $conn->query($g_204);
-													
-													if ($result1->num_rows == 1) {
-														
-														echo '<div class="span4">
-																<div class="bs-docs-sidenav" style="padding:20px; background:#F3F3F3">
-																<h4 align="center">P&I/SO</h4>
-																	<table cellpadding="5px">
-																		<tr>
-																			<td>
-																			<a href="ticket_view.php?skill=201">
-																			<i class="icon-tasks"></i> Total New/Open Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-info pull-right">
-																			'.$totalRows_g_1.'
-																			</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																			<a href="ct.php?skill=201">
-																			<i class="icon-tasks"></i>Total Closed Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-warning pull-right">
-																			'.$totalRows_g_1_closed.'
-																			</span>
-																			</td>
-																		</tr>
-																	</table>
-																 </div>
-														   </div>';
-														}
-													if ($result2->num_rows == 1) {
-														
-														echo '<div class="span4">
-																<div class="bs-docs-sidenav" style="padding:20px; background:#F3F3F3">
-																<h4 align="center">SO/IT&B</h4>
-																	<table cellpadding="5px">
-																		<tr>
-																			<td>
-																			<a href="ticket_view.php?skill=202">
-																			<i class="icon-tasks"></i> Total New/Open Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-info pull-right">
-																			'.$totalRows_g_2.'
-																			</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																			<a href="ct.php?skill=202">
-																			<i class="icon-tasks"></i> Total Closed Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-warning pull-right">
-																			'.$totalRows_g_2_closed.'
-																			</span>
-																			</td>
-																		</tr>
-																	</table>
-																 </div>
-														   </div>';
-														}
-													if ($result3->num_rows == 1) {
-														
-														echo '<div class="span4">
-																<div class="bs-docs-sidenav" style="padding:20px; background:#F3F3F3">
-																<h4 align="center">CRM/IT&B</h4>
-																	<table cellpadding="5px">
-																		<tr>
-																			<td>
-																			<a href="ticket_view.php?skill=203">
-																			<i class="icon-tasks"></i> Total New/Open Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-info pull-right">
-																			'.$totalRows_g_3.'
-																			</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																			<a href="ct.php?skill=203">
-																			<i class="icon-tasks"></i> Total Closed Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-warning pull-right">
-																			'.$totalRows_g_3_closed.'
-																			</span>
-																			</td>
-																		</tr>
-																	</table>
-																 </div>
-														   </div>';
-														}
-													if ($result4->num_rows == 1) {
-														
-														echo '<div class="span4">
-																<div class="bs-docs-sidenav" style="padding:20px; background:#F3F3F3">
-																<h4 align="center">M&S(VAS)/IT&B</h4>
-																	<table cellpadding="5px">
-																		<tr>
-																			<td>
-																			<a href="ticket_view.php?skill=204">
-																			<i class="icon-tasks"></i> Total New/Open Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-info pull-right">
-																			'.$totalRows_g_4.'
-																			</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																			<a href="ticket_view.php?skill=204">
-																			<i class="icon-tasks"></i> Total Closed Tickets
-																			</a>
-																			</td>
-																			<td> 
-																			<span class="badge badge-warning pull-right">
-																			'.$totalRows_g_4_closed.'
-																			</span>
-																			</td>
-																		</tr>
-																	</table>
-																 </div>
-														   </div>';
-														}
-												}
-											?>
-                                        
-                                </div>
+                <div class="span12  text-center">
+                    <?php
+                        if (isset($_GET['success'])) {
+                            // code...
+                            echo "<h3 style='color:green'>Password updated successfully</h3>";
+                        }
+                        
+                        if (isset($_GET['pass_mismatch'])) {
+                            // code...
+                            echo "<h3 style='color:red'>Password Mismatch</h3>";
+                        }
+                        
+                        if (isset($_GET['error'])) {
+                            // code...
+                            echo "<h3 style='color:red'>Somethign Went wrong.Try later</h3>";
+                        }
+                    
+                    ?>    
+                </div>
+            </div>    
+        </div>
+        <hr>
+
+    <!--PASSWORD FORM-->
+        <div class="container">
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span8">
+                     <form action="profile.php" method="POST">
+                        <div class="form-inline">
+                            <div class="span3">
+                                <label>Password</label>&nbsp;&nbsp;
+                            </div>    
+                            <div class="span9">    
+                                <input type="password" name="password"/ required>
                             </div>
                         </div>
-                        <!-- /block -->
-                    </div>
+                        <div class="form-inline">
+                            <div class="span3">
+                                
+                                <label>Confirm Password</label>&nbsp;&nbsp;
+                            </div>    
+                            <div class="span9">
+                                     
+                                <input type="password" name="confirm_password"/ required>
+                            </div>
+                        </div>
+                        <div class="form-inline">
+                            <div class="span2">
+                                
+                            </div>    
+                            <div class="span9">
+                                <br>    
+                                <button class="btn btn-success" type="submit" name="update_pass">Submit</button>
+                            </div>
+                         </div>
+                     </form>     
                 </div>
-      		</div>
-      <hr>
-            <footer>
-                <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
-            </footer>
+            </div>    
         </div>
+        
+        
+        
+ <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <footer>
+            <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
+        </footer>
         <!--/.fluid-container-->
 
         <script src="../vendors/jquery-1.9.1.js"></script>
@@ -439,34 +337,5 @@ include "getmessage.php";
         <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
-
 </html>
-<?php
-  $g_1->free_result();
-
-  $g_1_closed->free_result();
-
-  $g_2->free_result();
-
-  $g_2_closed->free_result();
-
-  $g_3->free_result();
-
-  $g_3_closed->free_result();
-
-  $g_4->free_result();
-
-  $g_4_closed->free_result();
-
-  $dept->free_result();
-
-  $dept_closed->free_result();
-
-  $gruop_name->free_result();
-?>

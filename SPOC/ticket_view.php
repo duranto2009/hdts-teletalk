@@ -121,7 +121,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a tabindex="-1" href="#">Profile</a>
+                                        <a tabindex="-1" href="profile.php">Profile</a>
                                     </li>
                                     <li class="divider"></li>
                                     <li> <a href="../scripts/logout.php">Logout</a> </li>
