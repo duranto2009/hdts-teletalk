@@ -1,6 +1,6 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 if (isset($_GET['_o'])){
 	if ($_GET['_o'] == 1) {
 		echo '<script language="javascript">';
@@ -169,7 +169,7 @@ $division = '<option>Select a Division</option>
                                                     <div id="3g"  style="display:none">
                                                        <label>Problem Sub-Catagory</label>
                                                       <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                            <option></option>
                                                             <option value="3g1">3G SERVICE NOT WORKING</option>
                                                             <option value="3g2">3G PACKAGE ACTIVATION</option>
                                                             <option value="3g3">3G PACKAGE DEACTIVATION</option>
@@ -179,7 +179,7 @@ $division = '<option>Select a Division</option>
                                                       <div id="bill_adjust"  style="display:none">
                                                        <label>Problem Sub-Catagory</label>
                                                         <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                            <option></option>
                                                             <option value="bill_adjust1">FNF OVERCHARGED</option>
                                                             <option value="bill_adjust2">OTHER OVERCHARGED ISSUE</option>
                                                             <option value="bill_adjust3"> REFIL/RECHARGE BONUS</option>
@@ -190,7 +190,7 @@ $division = '<option>Select a Division</option>
                                                          <div id="bill_recieve"  style="display:none">
                                                            <label>Problem Sub-Catagory</label>
                                                            <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                                <option></option>
                                                                 <option value="bill_recieve1">BILL NOT RECIEVED VIA POST</option>
                                                                 <option value="bill_recieve2">BILL NOT RECIEVED VIA EMAIL</option>
                                                             </select>
@@ -199,7 +199,7 @@ $division = '<option>Select a Division</option>
                                                          <div id="credit_control" style="display:none">
                                                            <label>Problem Sub-Catagory</label>
                                                            <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                                <option></option>
                                                                 <option value="credit_control1">OGBAR COMPLAIN</option>            
                                                             </select>
                                                  </div>
@@ -207,7 +207,7 @@ $division = '<option>Select a Division</option>
                                                          <div id="general"  style="display:none">
                                                            <label>Problem Sub-Catagory</label>
                                                            <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                                <option></option>
                                                                 <option value="general1">DISTRIBUTOR/RETAILER/SALES MAN COMPLAIN</option>
                                                             </select>
                                                  </div>
@@ -215,7 +215,7 @@ $division = '<option>Select a Division</option>
                                                          <div id="network" style="display:none">
                                                            <label>Problem Sub-Catagory</label>
                                                            <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                                <option></option>
                                                                 <option value="network1">ECHO COMPLAIN</option>
                                                                 <option value="network2">CALL DROP COMPLAIN</option>
                                                                 <option value="network3">OUTGOING CALL COMPLAIN</option>
@@ -231,7 +231,7 @@ $division = '<option>Select a Division</option>
                                                          <div id="payment" style="display:none">
                                                            <label>Problem Sub-Catagory</label>
                                                            <select class="form-control" size="6" id="selection" style="width:300px" name="slave"> 
-<option></option>
+                                                                <option></option>
                                                                 <option value="payment1">UNABLE TO PAY RECHARGE ACCOUNT</option>
                                                                 <option value="payment2">PAYMENT NOT POSTED</option>
                                                             </select>

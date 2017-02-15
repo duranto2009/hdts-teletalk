@@ -1,9 +1,9 @@
 <?php 
-include 'islogin.php';
-include 'Connection/connection.php';
+require 'islogin.php';
+require 'Connection/connection.php';
 if (isset($_GET['_t'])){
-		$user= mysqli_real_escape_string($conn, $_SESSION['username']);
-		$tk= mysqli_real_escape_string($conn, $_GET['_t']);
+		$user= $conn->real_escape_string($_SESSION['username']);
+		$tk= $conn->real_escape_string($_GET['_t']);
 		$sql = "UPDATE assignee SET viewed=1 WHERE username = '$user' AND ticket_id = '$tk'";
 		$result = $conn->query($sql);
 		$skill = $SESSION['skill'];

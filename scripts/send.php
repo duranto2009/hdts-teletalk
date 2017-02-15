@@ -1,12 +1,12 @@
 <?php
-include "../scripts/Connection/connection.php";
-$ticket = $_POST['t_id'];
-$subject = $_POST['subject'];
-$message = $_POST['message'];
+require "Connection/connection.php";
+	$ticket = $_POST['t_id'];
+	$subject = $_POST['subject'];
+	$message = $_POST['message'];
 
-echo $ticket;
-echo $subject;
-echo $message;
+	echo $ticket;
+	echo $subject;
+	echo $message;
 
 //$sql = "INSERT INTO message (ticket, subject, message) VALUES ('$ticket', '$subject', '$message')";
 

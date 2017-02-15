@@ -1,6 +1,6 @@
 <?php
-include 'islogin.php';
-include 'Connection/connection.php';
+require 'islogin.php';
+require 'Connection/connection.php';
 
 if (isset($_SESSION['username'])) {
 		if ($_SESSION['unit'] != 1){

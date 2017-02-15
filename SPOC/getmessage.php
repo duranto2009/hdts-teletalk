@@ -1,5 +1,5 @@
 <?php
-include "../scripts/Connection/connection.php";
+require "../scripts/Connection/connection.php";
 
 $member = $_SESSION['username'];
 

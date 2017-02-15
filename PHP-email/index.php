@@ -3,21 +3,18 @@ require 'PHPMailerAutoload.php';
 
 $mail = new PHPMailer;
 
-//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+$mail->SMTPDebug = 3;                               // Enable verbose debug output
 
 $mail->isSMTP();                                      // Set mailer to use SMTP
-$mail->Host = 'tls://smtp.gmail.com:587';  // Specify main and backup SMTP servers
-$mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'info@realvubd.com';                 // SMTP username
-$mail->Password = 'B3xinf0987654';                           // SMTP password
-$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-$mail->Port = 587;                                    // TCP port to connect to
+$mail->Host = 'ssl://mail.teletalk.com.bd:25';  // Specify main and backup SMTP servers
+$mail->SMTPAuth = false;                               // Enable SMTP authentication
+$mail->Username = 'crm.ticket@teletalk.com.bd';                 // SMTP username
+$mail->Password = 'crmticket';                           // SMTP password
+$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+$mail->Port = 25;                                    // TCP port to connect to
 
-$mail->setFrom('info@realvubd.com', 'REALVU TICKETING SYSTEM');
-$mail->addAddress('viparvez@gmail.com', 'Sirajum Monir Parvez');     // Add a recipient
-$mail->addAddress('sirajum.parvez@digicontechnologies.com');               // Name is optional
-$mail->addReplyTo('info@realvubd.com', 'REALVU');
-$mail->addCC('akandshuvo@hotmail.com');
+$mail->setFrom('crm.ticket@teletalk.com.bd', 'Teletalk');
+$mail->addAddress('crm.ticket@teletalk.com.bd', 'Sirajum Monir Parvez');     // Add a recipient
 //$mail->addBCC('rajib.das@digicontechnologies.com');
 
 //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments

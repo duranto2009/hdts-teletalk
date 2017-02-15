@@ -1,5 +1,7 @@
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+<?php 
+
+require ('../scripts/Connection/connection.php'); 
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -7,7 +9,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -36,7 +38,7 @@ if ((isset($_GET['u'])) && ($_GET['u'] != "")) {
                        GetSQLValueString($_GET['u'], "text"));
 
   //mysql_select_db($database_conn, $conn);
-  $Result1 = $conn->query($deleteSQL) or die(mysql_error());
+  $Result1 = $conn->query($deleteSQL);
 
 
 
@@ -52,10 +54,8 @@ if ((isset($_GET['u'])) && ($_GET['u'] != "")) {
   $deleteSQL = sprintf("DELETE FROM g_201 WHERE username=%s",
                        GetSQLValueString($_GET['u'], "text"));
 
-
   //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($deleteSQL) or die(mysql_error());
-
+  $Result1 = $conn->query($deleteSQL);
 
   $deleteGoTo = "user.php";
   if (isset($_SERVER['QUERY_STRING'])) {
@@ -69,12 +69,8 @@ if ((isset($_GET['u'])) && ($_GET['u'] != "")) {
   $deleteSQL = sprintf("DELETE FROM g_202 WHERE username=%s",
                        GetSQLValueString($_GET['u'], "text"));
 
-
-
   //mysql_select_db($database_conn, $conn);
-  $Result1 = $conn->query($deleteSQL) or die(mysql_error());
-
-
+  $Result1 = $conn->query($deleteSQL);
 
   $deleteGoTo = "user.php";
   if (isset($_SERVER['QUERY_STRING'])) {
@@ -88,12 +84,8 @@ if ((isset($_GET['u'])) && ($_GET['u'] != "")) {
   $deleteSQL = sprintf("DELETE FROM g_203 WHERE username=%s",
                        GetSQLValueString($_GET['u'], "text"));
 
-
-
   //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($deleteSQL) or die(mysql_error());
-
-
+  $Result1 = $conn->query($deleteSQL);
 
   $deleteGoTo = "user.php";
   if (isset($_SERVER['QUERY_STRING'])) {
@@ -107,12 +99,8 @@ if ((isset($_GET['u'])) && ($_GET['u'] != "")) {
   $deleteSQL = sprintf("DELETE FROM g_204 WHERE username=%s",
                        GetSQLValueString($_GET['u'], "text"));
 
-
-
   //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($deleteSQL) or die(mysql_error());
-
-
+  $Result1 = $conn->query($deleteSQL);
 
   $deleteGoTo = "user.php";
   if (isset($_SERVER['QUERY_STRING'])) {

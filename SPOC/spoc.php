@@ -1,66 +1,64 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2";
-$res = $conn->query($sql);
-$num = $res->num_rows();
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+  require '../scripts/islogin.php';
+  require '../scripts/Connection/connection.php';
 
-// ** Logout the current user. **
-$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
-  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
-}
+  $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
+  $res = $conn->query($sql);
+  $num = $res->num_rows();
 
-if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
-  //to fully log out a visitor we need to clear the session varialbles
-  $_SESSION['MM_Username'] = NULL;
-  $_SESSION['MM_UserGroup'] = NULL;
-  $_SESSION['PrevUrl'] = NULL;
-  unset($_SESSION['MM_Username']);
-  unset($_SESSION['MM_UserGroup']);
-  unset($_SESSION['PrevUrl']);
-	
-  $logoutGoTo = "../login.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
+
+  // ** Logout the current user. **
+  $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+  if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+    $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
   }
-}
-?>
-<?php
+
+  if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+      //to fully log out a visitor we need to clear the session varialbles
+      $_SESSION['MM_Username'] = NULL;
+      $_SESSION['MM_UserGroup'] = NULL;
+      $_SESSION['PrevUrl'] = NULL;
+      unset($_SESSION['MM_Username']);
+      unset($_SESSION['MM_UserGroup']);
+      unset($_SESSION['PrevUrl']);
+    	
+      $logoutGoTo = "../login.php";
+      if ($logoutGoTo) {
+        header("Location: $logoutGoTo");
+        exit;
+      }
+    }
+
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+    {
+      if (PHP_VERSION < 6) {
+        $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+      }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+      $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+      switch ($theType) {
+        case "text":
+          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+          break;    
+        case "long":
+        case "int":
+          $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+          break;
+        case "double":
+          $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+          break;
+        case "date":
+          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+          break;
+        case "defined":
+          $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+          break;
+      }
+      return $theValue;
+    }
   }
-  return $theValue;
-}
-}
 
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
@@ -280,7 +278,7 @@ $row_dept_closed = $dept_closed->fetch_assoc();
 $totalRows_dept_closed = $dept_closed->num_rows;
 
 
-include "getmessage.php";	
+require 'getmessage.php';	
 ?>
 
 <!DOCTYPE html>
@@ -792,20 +790,15 @@ include "getmessage.php";
 
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
         
         <!--/.fluid-container-->
         <script src="../vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
-		<script src="../vendors/ckeditor/ckeditor.js"></script>
-		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
+    		<script src="../vendors/ckeditor/ckeditor.js"></script>
+    		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
 
-		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
+    		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
         <script>
         $(function() {
             // Bootstrap

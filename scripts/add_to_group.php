@@ -1,5 +1,5 @@
 <?php
-include "Connection/connection.php";
+require "Connection/connection.php";
 if (isset($_POST['add_1'])){
 	$username=$_POST['username'];
 	$unit=$_POST['unit'];
@@ -7,7 +7,7 @@ if (isset($_POST['add_1'])){
 		$sql = "INSERT INTO g_201 (username, unit) VALUES ('$username', '$unit')";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab1');
+			header ('location:../admin/groups.back.php#tab1');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -19,7 +19,7 @@ if (isset($_POST['add_2'])){
 	$sql = "INSERT INTO g_202 (username, unit) VALUES ('$username', '$unit')";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab2');
+			header ('location:../admin/groups.back.php#tab2');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -32,7 +32,7 @@ if (isset($_POST['add_3'])){
 	$sql = "INSERT INTO g_203 (username, unit) VALUES ('$username', '$unit')";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab3');
+			header ('location:../admin/groups.back.php#tab3');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -45,7 +45,7 @@ if (isset($_POST['add_4'])){
 	$sql = "INSERT INTO g_204 (username, unit) VALUES ('$username', '$unit')";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab4');
+			header ('location:../admin/groups.back.php#tab4');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -57,7 +57,7 @@ if (isset($_POST['del1'])){
 		$sql = "DELETE FROM g_201 WHERE username = '$username'";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab1');
+			header ('location:../admin/groups.back.php#tab1');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -69,7 +69,7 @@ if (isset($_POST['del2'])){
 		$sql = "DELETE FROM g_202 WHERE username = '$username'";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab2');
+			header ('location:../admin/groups.back.php#tab2');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -81,7 +81,7 @@ if (isset($_POST['del3'])){
 		$sql = "DELETE FROM g_203 WHERE username = '$username'";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab3');
+			header ('location:../admin/groups.back.php#tab3');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}
@@ -93,7 +93,7 @@ if (isset($_POST['del4'])){
 		$sql = "DELETE FROM g_204 WHERE username = '$username'";
 		
 		if ($conn->query($sql) === TRUE) {
-			header ('location:../admin/groups.php#tab4');
+			header ('location:../admin/groups.back.php#tab4');
 		} else {
 			echo "Error: " . $sql . "<br>" . $conn->error;
 		}

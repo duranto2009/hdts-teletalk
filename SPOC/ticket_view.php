@@ -1,68 +1,68 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+  require '../scripts/islogin.php';
+  require '../scripts/Connection/connection.php';
 
-if (!isset($_GET['skill'])) {
-	header ('location:login.php');
-}
-
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
-$res = $conn->query($sql);
-$num = $res->num_rows;
-
-if (isset($_SESSION['username'])) {
-		if ($_SESSION['unit'] != 2){
-		echo $_SESSION['unit'];
-		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
-	}
-}
-if (!isset($_GET['skill'])){ 
-	header('location:login.php');
-}
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  if (!isset($_GET['skill'])) {
+  	header ('location:login.php');
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  $sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
+  $res = $conn->query($sql);
+  $num = $res->num_rows;
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+  if (isset($_SESSION['username'])) {
+  		if ($_SESSION['unit'] != 2){
+  		echo $_SESSION['unit'];
+  		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
+  	}
   }
-  return $theValue;
-}
-}
+  if (!isset($_GET['skill'])){ 
+  	header('location:login.php');
+  }
+  ?>
+  <?php require_once('../Connections/conn.php'); ?>
+  <?php
+  if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
-$skill = $_GET['skill'];
+    //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-//mysql_select_db($database_conn, $conn);
-$query_query_ticket = "SELECT * FROM ticket WHERE status != 2 AND skill_id = '$skill' ORDER BY ticket.id ASC";
-$query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
-$row_query_ticket = $query_ticket->fetch_assoc();
-$totalRows_query_ticket = $query_ticket->num_rows;
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+  }
+
+  $skill = $_GET['skill'];
+
+  //mysql_select_db($database_conn, $conn);
+  $query_query_ticket = "SELECT * FROM ticket WHERE status != 2 AND skill_id = '$skill' ORDER BY ticket.id ASC";
+  $query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
+  $row_query_ticket = $query_ticket->fetch_assoc();
+  $totalRows_query_ticket = $query_ticket->num_rows;
 
 
-include "getmessage.php";
+  require 'getmessage.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -154,9 +154,7 @@ include "getmessage.php";
                         <li>
                             <a href="mydepartment.php?skill=<?php echo $myskill ?>"> My Group</a>
                         </li>
-                        <li>
-                            <a href="ct.php?skill=<?php echo $myskill ?>"><span class="badge badge-warning pull-right"><?php echo $num; ?></span> Closed</a>
-                        </li>
+                    </ul>   
                 </div>
                 <!--/span-->
                 <div class="span9" id="content">
@@ -219,18 +217,11 @@ include "getmessage.php";
         <script src="../vendors/jquery-1.9.1.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
-
-
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
 
 </html>
 <?php
-$query_ticket->free_result();
+  $query_ticket->free_result();
 ?>

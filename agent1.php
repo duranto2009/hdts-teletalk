@@ -1,28 +1,28 @@
 <?php
-include 'scripts/islogin.php';
-include 'scripts/Connection/connection.php';
-if (isset($_GET['_o'])){
-	if ($_GET['_o'] == 1) {
-		echo '<script language="javascript">';
-		echo 'alert("Informaion Sent.")';
-		echo '</script>';	
-	}
-} 
-else {
-	echo "";
-}
-if (isset($_SESSION['username'])) {
-		if ($_SESSION['unit'] != 0){
-		echo $_SESSION['unit'];
-		header('location:login.php');
-	}
-}
-if (isset($_GET['r'])){
-	if($_GET['r']==1){
-		header("Refresh:2;url=agent.php");
-		
-	}
-}
+  require 'scripts/islogin.php';
+  require 'scripts/Connection/connection.php';
+    if (isset($_GET['_o'])){
+    	if ($_GET['_o'] == 1) {
+    		echo '<script language="javascript">';
+    		echo 'alert("Informaion Sent.")';
+    		echo '</script>';	
+    	}
+    } 
+    else {
+    	echo "";
+    }
+    if (isset($_SESSION['username'])) {
+    		if ($_SESSION['unit'] != 0){
+    		echo $_SESSION['unit'];
+    		header('location:login.php');
+    	}
+    }
+    if (isset($_GET['r'])){
+    	if($_GET['r']==1){
+    		header("Refresh:2;url=agent.php");
+    		
+    	}
+    }
 ?>
 <!DOCTYPE html>
 <html>

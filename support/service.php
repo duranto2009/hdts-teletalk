@@ -1,12 +1,10 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
+
 $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
 $res = $conn->query($sql);
 $num = $res->num_rows;
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
 
 // ** Logout the current user. **
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
@@ -29,8 +27,7 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
     exit;
   }
 }
-?>
-<?php
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -38,7 +35,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -307,10 +304,7 @@ $totalRows_notification = $notification->num_rows;
                             <a href="index.php"> Dashboard</a>
                         </li>
                         <li>
-                            <a href="closed.php?skill=<?php echo $_SESSION['skill'] ?>"> Closed Ticket</a>
-                        </li>
-                        <li>
-                            <a href="#"> Logs</a>
+                            <a href="closed.php?skill=<?php echo $_GET['skill'] ?>"> Closed Ticket</a>
                         </li>
                     </ul>
                 </div>
@@ -616,24 +610,14 @@ $totalRows_notification = $notification->num_rows;
         <script src="../vendors/jquery-1.9.1.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
-
-
         <script src="../assets/scripts.js"></script>
-        <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
-        
+        <script src="../assets/DT_bootstrap.js"></script>        
         <!--/.fluid-container-->
         <script src="../vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
-
-		<script src="../vendors/ckeditor/ckeditor.js"></script>
-		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
-
-		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
+    		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    		<script src="../vendors/ckeditor/ckeditor.js"></script>
+    		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
+    		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
         <script>
         $(function() {
             // Bootstrap
@@ -682,19 +666,19 @@ $totalRows_notification = $notification->num_rows;
 
 </html>
 <?php
-$query_ticket->free_result();
+  $query_ticket->free_result();
 
-$query_progress->free_result();
+  $query_progress->free_result();
 
-$ticket_status->free_result();
+  $ticket_status->free_result();
 
-$form1_search->free_result();
+  $form1_search->free_result();
 
-$form2_search->free_result();
+  $form2_search->free_result();
 
-$form3_search->free_result();
+  $form3_search->free_result();
 
-$form4_search->free_result();
+  $form4_search->free_result();
 
-$search_assignee->free_result();
+  $search_assignee->free_result();
 ?>

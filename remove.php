@@ -1,6 +1,6 @@
 <?php
-	include 'scripts/islogin.php';
-	include 'scripts/Connection/connection.php';
+	require 'scripts/islogin.php';
+	require 'scripts/Connection/connection.php';
 
 	$user = $_POST['user'];
 	$t_id = $_POST['ticket'];

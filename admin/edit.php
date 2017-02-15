@@ -1,9 +1,12 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require ('../scripts/islogin.php');
+require ('../scripts/Connection/connection.php');
+
+
+
 $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
 $res = $conn->query($sql);
-$num = mysqli_num_rows($res);
+$num = $res->num_rows;
 
 if (isset($_SESSION['username'])) {
 		if ($_SESSION['unit'] != 1){
@@ -11,9 +14,8 @@ if (isset($_SESSION['username'])) {
 		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
 	}
 }
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -21,7 +23,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -65,11 +67,8 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "adduser")) {
                        GetSQLValueString($_POST['unit'], "int"),
                        GetSQLValueString($_POST['username'], "text"));
 
-
   //mysql_select_db($database_conn, $conn);
-  $Result1 = $conn->query($updateSQL) or die(mysql_error());
-
-
+  $Result1 = $conn->query($updateSQL);
 
   $updateGoTo = "edit.php?_s=1";
   if (isset($_SERVER['QUERY_STRING'])) {
@@ -84,14 +83,11 @@ if (isset($_GET['u'])) {
   $colname_user = $_GET['u'];
 }
 
-
 //mysql_select_db($database_conn, $conn);
-  $query_user = sprintf("SELECT * FROM `user` WHERE id = %s", GetSQLValueString($colname_user, "int"));
-  $user =  $conn->query($query_user) or die(mysql_error());
-  $row_user = $user->fetch_assoc();
-  $totalRows_user = $user->num_rows;
-
-
+$query_user = sprintf("SELECT * FROM `user` WHERE id = %s", GetSQLValueString($colname_user, "int"));
+$user = $conn->query($query_user);
+$row_user = $user->fetch_assoc();
+$totalRows_user = $user->num_rows;
 
 ?>
 <!DOCTYPE html>
@@ -239,6 +235,7 @@ if (isset($_GET['u'])) {
                                             <p><input type="radio" name="unit" value="2" <?php if ($row_user['unit']==2){echo "checked";} ?>> SPOC</p>
                                             <p><input type="radio" name="unit" value="3" <?php if ($row_user['unit']==3){echo "checked";} ?>> Support Member</p>
                                             <p><input type="radio" name="unit" value="0" <?php if ($row_user['unit']==0){echo "checked";} ?>> Agent Only</p>
+                                            <p><input type="radio" name="unit" value="1" <?php if ($row_user['unit']==1){echo "checked";} ?>> ADMIN</p>
                                           </div>
                                         </div>
                                         

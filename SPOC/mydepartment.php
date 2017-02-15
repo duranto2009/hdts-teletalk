@@ -1,64 +1,65 @@
-<?php require_once('../Connections/conn.php'); 
-if (!isset($_GET['skill'])) {
-	header ('location:login.php');
-}
-?>
 <?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-$skill = $_GET['skill'];
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 
 
-//mysql_select_db($database_conn, $conn);
-$query_user = "SELECT * FROM user WHERE user.skill_id ='$skill'";
-$user = $conn->query($query_user) or die(mysql_error());
-$row_user = $user->fetch_assoc();
-$totalRows_user = $user->num_rows;
+    if (!isset($_GET['skill'])) {
+        	header ('location:login.php');
+        }
+
+    if (!function_exists("GetSQLValueString")) {
+        function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+            {
+              if (PHP_VERSION < 6) {
+                $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+              }
+
+              $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_real_escape_string($theValue);
+
+              switch ($theType) {
+                case "text":
+                  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+                  break;    
+                case "long":
+                case "int":
+                  $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+                  break;
+                case "double":
+                  $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+                  break;
+                case "date":
+                  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+                  break;
+                case "defined":
+                  $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+                  break;
+              }
+              return $theValue;
+            }
+        }
+
+    $skill = $_GET['skill'];
 
 
-?>
-<?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
-$res = $conn->query($sql);
-$num = mysqli_num_rows($res);
-if (isset($_SESSION['username'])) {
-		if ($_SESSION['unit'] != 2){
-		echo $_SESSION['unit'];
-		echo "<div style='text-align:center;'><h1>You are not an SPOC</h1> <h3>You cannot access this page.</h3>";
-	}
-}
+    //mysql_select_db($database_conn, $conn);
+    $query_user = "SELECT * FROM user WHERE user.skill_id ='$skill'";
+    $user = $conn->query($query_user) or die(mysql_error());
+    $row_user = $user->fetch_assoc();
+    $totalRows_user = $user->num_rows;
 
-include "getmessage.php";
+
+    $sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
+    $res = $conn->query($sql);
+    $num = $res->num_rows;
+    if (isset($_SESSION['username'])) {
+    		if ($_SESSION['unit'] != 2){
+    		echo $_SESSION['unit'];
+    		echo "<div style='text-align:center;'><h1>You are not an SPOC</h1> <h3>You cannot access this page.</h3>";
+    	}
+    }
+
+    require "getmessage.php";
 ?>
 
 <!DOCTYPE html>
@@ -148,9 +149,6 @@ include "getmessage.php";
                         <li class="active">
                             <a href="mydepartment.php?skill=<?php echo $_GET['skill']; ?>">My Group</a>
                         </li>
-                        <li>
-                            <a href="ct.php?skill=<?php echo $_GET['skill']; ?>"><span class="badge badge-warning pull-right"><?php echo $num ?> </span> Closed Tickets</a>
-                        </li>
                     </ul>
                 </div>
                 <!--/span-->
@@ -218,17 +216,9 @@ include "getmessage.php";
         <script src="../vendors/jquery-1.9.1.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
-
-
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
-
 </html>
 <?php
     $user->free_result();

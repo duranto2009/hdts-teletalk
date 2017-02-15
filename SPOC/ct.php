@@ -1,5 +1,7 @@
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+<?php 
+    require  '../scripts/islogin.php';
+    require  '../scripts/Connection/connection.php';
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -40,12 +42,11 @@ $totalRows_closed_ticket = $closed_ticket->num_rows;
 
 ?>
 <?php
-    include '../scripts/islogin.php';
-    include '../scripts/Connection/connection.php';
+
     $sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
     $res = $conn->query($sql);
     $num = $res->num_rows;
-    include "getmessage.php";	
+    require 'getmessage.php';	
 ?>
 <!DOCTYPE html>
 <html>

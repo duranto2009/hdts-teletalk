@@ -1,6 +1,6 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require ('../scripts/islogin.php');
+require ('../scripts/Connection/connection.php');
 
 if (isset($_GET['_s'])){
 	if($_GET['_s']==1){
@@ -17,7 +17,7 @@ if (isset($_SESSION['username'])) {
 }
 
 ?>
-<?php require_once('../Connections/conn.php'); ?>
+<?php //require('../Connections/conn.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -26,7 +26,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_real_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -70,13 +70,13 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "adduser")) {
   $Result1 = $conn->query($insertSQL) or die(mysql_error());
   mysql_query($sql);
 
-  $insertGoTo = "mail.php?username=".$_POST['username']."&email=".$_POST['user_email']."&pass=".$_POST['password']."&full=".$_POST['full_name']."";
-  if (isset($_SERVER['QUERY_STRING'])) {
+  //$insertGoTo = "mail.php?username=".$_POST['username']."&email=".$_POST['user_email']."&pass=".$_POST['password']."&full=".$_POST['full_name']."";
+  //if (isset($_SERVER['QUERY_STRING'])) {
     //include "mail.php";
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
-  }
-  header(sprintf("Location: %s", $insertGoTo));
+  //  $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
+  //  $insertGoTo .= $_SERVER['QUERY_STRING'];
+  //}
+  header(sprintf("Location:adduser.php?s=1"));
 }
 
 
@@ -195,7 +195,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "adduser")) {
                             </div>
                             <div class="block-content collapse in">
                             <div align="span12" style="text-align:center">
-													<?php if(isset($_GET['_s']) == 1)
+													<?php if(isset($_GET['s']) == 1)
 															{ 
 																echo "<h5 style='color:green'>User Created Successfully !</h5>";
 															} else echo "<input type='hidden'>"; 

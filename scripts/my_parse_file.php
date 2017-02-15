@@ -1,5 +1,5 @@
 <?php 
-include 'Connection/connection.php';
+require 'Connection/connection.php';
 $sql = "SELECT * FROM slave_slave WHERE ms_code = ".$_POST['ms_code']."";
 $result = $conn->query($sql);
 

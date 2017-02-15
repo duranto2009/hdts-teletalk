@@ -1,6 +1,7 @@
-<?php include '../scripts/islogin.php'; ?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+<?php 
+ require '../scripts/islogin.php';
+ require '../scripts/Connection/connection.php'; 
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -195,11 +196,6 @@ $totalRows_progress = $progress->num_rows;
 
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
 
 </html>

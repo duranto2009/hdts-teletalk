@@ -1,6 +1,6 @@
 <?php 
-include 'Connection/connection.php';
-$user= mysqli_real_escape_string($conn, $_POST['username']);
+require 'Connection/connection.php';
+$user= $conn->real_escape_string($_POST['username']);
 $length= strlen($user);
 if ($username == NULL || $length < 6 || $length > 16) {
 	echo "<span style='color:blue; font-weight:bold'>Username should be minimun 6 characters and maximum 16</span>";	

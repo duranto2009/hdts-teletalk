@@ -1,12 +1,9 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
 $res = $conn->query($sql);
 $num = $res->num_rows;
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
 
 // ** Logout the current user. **
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
@@ -22,15 +19,14 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
   unset($_SESSION['MM_Username']);
   unset($_SESSION['MM_UserGroup']);
   unset($_SESSION['PrevUrl']);
-	
+  
   $logoutGoTo = "../login.php";
   if ($logoutGoTo) {
     header("Location: $logoutGoTo");
     exit;
   }
 }
-?>
-<?php
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -38,7 +34,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -343,225 +339,225 @@ $totalRows_form4_search = $form4_search->num_rows;
                                 <span style="color:#006"><u>0<?php echo $row_query_ticket['customer_no']; ?></u></span>
                                 <p style="text-align:right"><em>Created on:</em> <span style="font-weight:bold;"><?php echo $row_query_ticket['start_date']; ?></span></p>
                                 <p style="text-align:right"><em>Deadline for this ticket is: </em><span style="background-color:#F93; font-weight:bold; padding:10px"><?php if (empty($row_query_ticket['deadline']))
-											{echo "Not Defined";}
-											else 
-											echo $row_query_ticket['deadline']; ?></span></p>
+                      {echo "Not Defined";}
+                      else 
+                      echo $row_query_ticket['deadline']; ?></span></p>
                                 <form method="POST" action="<?php echo $editFormAction; ?>" name="close">
-                                	<input type="hidden" name="status" value="2">
-                               		<button type="submit" name="submit" class="btn btn-danger btn-mini">Close This Ticket</button>
-                               		<input type="hidden" name="MM_update" value="close">
+                                  <input type="hidden" name="status" value="2">
+                                  <button type="submit" name="submit" class="btn btn-danger btn-mini">Close This Ticket</button>
+                                  <input type="hidden" name="MM_update" value="close">
                                 </form>
                                 <hr>
                                 <div class="span12">
                                 <table style="font-weight:bold; text-align:right" cellpadding="2px">
                                 <?php 
-									if ($totalRows_form1_search>0){
-										echo "<tr><td style='color:#698975'>Ticket <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['ticket_id']."</td><tr>";
-										if ($row_form1_search['division'] != NULL){
-											echo "<tr><td style='color:#698975'>Division <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['division']."</td><tr>";
-										}
-										if ($row_form1_search['district'] != NULL){
-											echo "<tr><td style='color:#698975'>District <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['district']."</td><tr>";
-										}
-										if ($row_form1_search['thana'] != NULL){
-											echo "<tr><td style='color:#698975'>Thana <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['thana']."</td><tr>";
-										}
-										if ($row_form1_search['loc'] != NULL){
-											echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['loc']."</td><tr>";
-										}
-										if ($row_form1_search['problem'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['problem']."</td><tr>";
-										}
-										if ($row_form1_search['set_m'] != NULL){
-											echo "<tr><td style='color:#698975'>Hand Set Model No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['set_m']."</td><tr>";
-										}
-										if ($row_form1_search['error_m'] != NULL){
-											echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['error_m']."</td><tr>";
-										}
-										if ($row_form1_search['alt_m'] != NULL){
-											echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_m']."</td><tr>";
-										}
+                  if ($totalRows_form1_search>0){
+                    echo "<tr><td style='color:#698975'>Ticket <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['ticket_id']."</td><tr>";
+                    if ($row_form1_search['division'] != NULL){
+                      echo "<tr><td style='color:#698975'>Division <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['division']."</td><tr>";
+                    }
+                    if ($row_form1_search['district'] != NULL){
+                      echo "<tr><td style='color:#698975'>District <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['district']."</td><tr>";
+                    }
+                    if ($row_form1_search['thana'] != NULL){
+                      echo "<tr><td style='color:#698975'>Thana <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['thana']."</td><tr>";
+                    }
+                    if ($row_form1_search['loc'] != NULL){
+                      echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['loc']."</td><tr>";
+                    }
+                    if ($row_form1_search['problem'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['problem']."</td><tr>";
+                    }
+                    if ($row_form1_search['set_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Hand Set Model No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['set_m']."</td><tr>";
+                    }
+                    if ($row_form1_search['error_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['error_m']."</td><tr>";
+                    }
+                    if ($row_form1_search['alt_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_m']."</td><tr>";
+                    }
                                         if ($row_form1_search['3g_pac'] != NULL){
-											echo "<tr><td style='color:#698975'>3G Pack <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['3g_pac']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>3G Pack <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['3g_pac']."</td><tr>";
+                    }
                                         if ($row_form1_search['b_msisdn'] != NULL){
-											echo "<tr><td style='color:#698975'>B-Part Mobile Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['b_msisdn']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>B-Part Mobile Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['b_msisdn']."</td><tr>";
+                    }
                                         if ($row_form1_search['other_set'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem with other set <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['other_set']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Problem with other set <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['other_set']."</td><tr>";
+                    }
                                         if ($row_form1_search['signal_str'] != NULL){
-											echo "<tr><td style='color:#698975'>Signal Strength <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['signal_str']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Signal Strength <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['signal_str']."</td><tr>";
+                    }
                                         if ($row_form1_search['top'] != NULL){
-											echo "<tr><td style='color:#698975'>Temporary or Persistent? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['top']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Temporary or Persistent? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['top']."</td><tr>";
+                    }
                                         if ($row_form1_search['spec_time'] != NULL){
-											echo "<tr><td style='color:#698975'>Any Specific Time? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['spec_time']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Any Specific Time? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['spec_time']."</td><tr>";
+                    }
                                         if ($row_form1_search['isd_no'] != NULL){
-											echo "<tr><td style='color:#698975'>ISD No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['isd_no']."</td><tr>";
-										}
-										if ($row_form1_search['gprs_pack'] != NULL){
-											echo "<tr><td style='color:#698975'>GPRS Pack Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['gprs_pack']."</td><tr>";
-										}
-										if ($row_form1_search['prob_duration'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['prob_duration']."</td><tr>";
-										}
-										if ($row_form1_search['vas'] != NULL){
-											echo "<tr><td style='color:#698975'>VAS <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['vas']."</td><tr>";
-										}
-										if ($row_form1_search['cust_veri'] != NULL){
-											echo "<tr><td style='color:#698975'>Customer Verification <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['cust_veri']."</td><tr>";
-										}
-										if ($row_form1_search['shortcode'] != NULL){
-											echo "<tr><td style='color:#698975'>Short Code <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['shortcode']."</td><tr>";
-										}
-										if ($row_form1_search['alt_name'] != NULL){
-											echo "<tr><td style='color:#698975'>Alternate Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_name']."</td><tr>";
-										}
-										if ($row_form1_search['current_package'] != NULL){
-											echo "<tr><td style='color:#698975'>Current Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['current_package']."</td><tr>";
-										}
-										if ($row_form1_search['req_fnf'] != NULL){
-											echo "<tr><td style='color:#698975'>Required FNF <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['req_fnf']."</td><tr>";
-										}
-										if ($row_form1_search['fnf_add_date'] != NULL){
-											echo "<tr><td style='color:#698975'>FNF add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['fnf_add_date']."</td><tr>";
-										}
-										if ($row_form1_search['desired_pack'] != NULL){
-											echo "<tr><td style='color:#698975'>Desired Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['desired_pack']."</td><tr>";
-										}
-										if ($row_form1_search['effective_date'] != NULL){
-											echo "<tr><td style='color:#698975'>Effective Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['effective_date']."</td><tr>";
-										}
-										if ($row_form1_search['agent_message'] != NULL){
-											echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['agent_message']."</td><tr>";
-										}
-									} 
-									// Form 2
-									
-									elseif ($totalRows_form2_search>0){
-										if ($row_form2_search['ticket_id'] != NULL){
-											echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['ticket_id']."</td><tr>";
-										}
-										if ($row_form2_search['fnf_d'] != NULL){
-											echo "<tr><td style='color:#698975'>Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>ISD No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['isd_no']."</td><tr>";
+                    }
+                    if ($row_form1_search['gprs_pack'] != NULL){
+                      echo "<tr><td style='color:#698975'>GPRS Pack Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['gprs_pack']."</td><tr>";
+                    }
+                    if ($row_form1_search['prob_duration'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['prob_duration']."</td><tr>";
+                    }
+                    if ($row_form1_search['vas'] != NULL){
+                      echo "<tr><td style='color:#698975'>VAS <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['vas']."</td><tr>";
+                    }
+                    if ($row_form1_search['cust_veri'] != NULL){
+                      echo "<tr><td style='color:#698975'>Customer Verification <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['cust_veri']."</td><tr>";
+                    }
+                    if ($row_form1_search['shortcode'] != NULL){
+                      echo "<tr><td style='color:#698975'>Short Code <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['shortcode']."</td><tr>";
+                    }
+                    if ($row_form1_search['alt_name'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_name']."</td><tr>";
+                    }
+                    if ($row_form1_search['current_package'] != NULL){
+                      echo "<tr><td style='color:#698975'>Current Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['current_package']."</td><tr>";
+                    }
+                    if ($row_form1_search['req_fnf'] != NULL){
+                      echo "<tr><td style='color:#698975'>Required FNF <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['req_fnf']."</td><tr>";
+                    }
+                    if ($row_form1_search['fnf_add_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>FNF add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['fnf_add_date']."</td><tr>";
+                    }
+                    if ($row_form1_search['desired_pack'] != NULL){
+                      echo "<tr><td style='color:#698975'>Desired Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['desired_pack']."</td><tr>";
+                    }
+                    if ($row_form1_search['effective_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Effective Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['effective_date']."</td><tr>";
+                    }
+                    if ($row_form1_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['agent_message']."</td><tr>";
+                    }
+                  } 
+                  // Form 2
+                  
+                  elseif ($totalRows_form2_search>0){
+                    if ($row_form2_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form2_search['fnf_d'] != NULL){
+                      echo "<tr><td style='color:#698975'>Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
+                    }
                                         if ($row_form2_search['fnf'] != NULL){
-											echo "<tr><td style='color:#698975'>FNF No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>FNF No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf']."</td><tr>";
+                    }
                                         if ($row_form2_search['fnf_d'] != NULL){
-											echo "<tr><td style='color:#698975'>FNF Add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>FNF Add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
+                    }
                                         if ($row_form2_search['overc_p'] != NULL){
-											echo "<tr><td style='color:#698975'>Overcharged Period <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['overc_p']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Overcharged Period <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['overc_p']."</td><tr>";
+                    }
                                         if ($row_form2_search['prob'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['prob']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['prob']."</td><tr>";
+                    }
                                         if ($row_form2_search['eleg_offer'] != NULL){
-											echo "<tr><td style='color:#698975'>Elegible for (OFFER) <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['eleg_offer']."</td><tr>";
-										} 
+                      echo "<tr><td style='color:#698975'>Elegible for (OFFER) <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['eleg_offer']."</td><tr>";
+                    } 
                                         if ($row_form2_search['alt_no'] != NULL){
-											echo "<tr><td style='color:#698975'>Alternate No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['alt_no']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Alternate No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['alt_no']."</td><tr>";
+                    }
                                         if ($row_form2_search['agent_message'] != NULL){
-											echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['agent_message']."</td><tr>";
-										}
-									}
-										
-										// Form 3
-										elseif ($totalRows_form3_search>0){
-										if ($row_form3_search['ticket_id'] != NULL){
-											echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['ticket_id']."</td><tr>";
-										}
-										if ($row_form3_search['address'] != NULL){
-											echo "<tr><td style='color:#698975'>Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['address']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['agent_message']."</td><tr>";
+                    }
+                  }
+                    
+                    // Form 3
+                    elseif ($totalRows_form3_search>0){
+                    if ($row_form3_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form3_search['address'] != NULL){
+                      echo "<tr><td style='color:#698975'>Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['address']."</td><tr>";
+                    }
                                         if ($row_form3_search['req_bill_month'] != NULL){
-											echo "<tr><td style='color:#698975'>Requested Bill Month <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['req_bill_month']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Requested Bill Month <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['req_bill_month']."</td><tr>";
+                    }
                                         if ($row_form3_search['mod_address'] != NULL){
-											echo "<tr><td style='color:#698975'>Modified Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['mod_address']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Modified Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['mod_address']."</td><tr>";
+                    }
                                         if ($row_form3_search['alt_no'] != NULL){
-											echo "<tr><td style='color:#698975'>Alternate Contact <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['alt_no']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Alternate Contact <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['alt_no']."</td><tr>";
+                    }
                                         if ($row_form3_search['email'] != NULL){
-											echo "<tr><td style='color:#698975'>Email <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['email']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Email <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['email']."</td><tr>";
+                    }
                                         if ($row_form3_search['date'] != NULL){
-											echo "<tr><td style='color:#698975'>Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['date']."</td><tr>";
-										} 
+                      echo "<tr><td style='color:#698975'>Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['date']."</td><tr>";
+                    } 
                                         if ($row_form3_search['call_date'] != NULL){
-											echo "<tr><td style='color:#698975'>Date of Call <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['call_date']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Date of Call <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['call_date']."</td><tr>";
+                    }
                                         if ($row_form3_search['prob'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
+                    }
                                         if ($row_form3_search['current_bill'] != NULL){
-											echo "<tr><td style='color:#698975'>Current Bill <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Current Bill <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
+                    }
                                         if ($row_form3_search['msisdn'] != NULL){
-											echo "<tr><td style='color:#698975'>MSISDN <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['msisdn']."</td><tr>";
-										}
-										if ($row_form3_search['agent_message'] != NULL){
-											echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['agent_message']."</td><tr>";
-										}
-									}
-									
-									// Form 4
-										elseif ($totalRows_form4_search>0){
-										if ($row_form4_search['ticket_id'] != NULL){
-											echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['ticket_id']."</td><tr>";
-										}
-										if ($row_form4_search['recharge_method'] != NULL){
-											echo "<tr><td style='color:#698975'>Recharge Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['recharge_method']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>MSISDN <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['msisdn']."</td><tr>";
+                    }
+                    if ($row_form3_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['agent_message']."</td><tr>";
+                    }
+                  }
+                  
+                  // Form 4
+                    elseif ($totalRows_form4_search>0){
+                    if ($row_form4_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form4_search['recharge_method'] != NULL){
+                      echo "<tr><td style='color:#698975'>Recharge Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['recharge_method']."</td><tr>";
+                    }
                                         if ($row_form4_search['card_serial'] != NULL){
-											echo "<tr><td style='color:#698975'>Card Serial Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['card_serial']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Card Serial Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['card_serial']."</td><tr>";
+                    }
                                         if ($row_form4_search['prob_duration'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob_duration']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob_duration']."</td><tr>";
+                    }
                                         if ($row_form4_search['error_m'] != NULL){
-											echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['error_m']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['error_m']."</td><tr>";
+                    }
                                         if ($row_form4_search['loc'] != NULL){
-											echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['loc']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['loc']."</td><tr>";
+                    }
                                         if ($row_form4_search['prob'] != NULL){
-											echo "<tr><td style='color:#698975'>Problem <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob']."</td><tr>";
-										} 
+                      echo "<tr><td style='color:#698975'>Problem <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob']."</td><tr>";
+                    } 
                                         if ($row_form4_search['date_tried'] != NULL){
-											echo "<tr><td style='color:#698975'>Date Tried <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['date_tried']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Date Tried <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['date_tried']."</td><tr>";
+                    }
                                         if ($row_form4_search['paid_amount'] != NULL){
-											echo "<tr><td style='color:#698975'>Paid Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['paid_amount']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Paid Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['paid_amount']."</td><tr>";
+                    }
                                         if ($row_form4_search['dis_amount'] != NULL){
-											echo "<tr><td style='color:#698975'>Discount Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['dis_amount']."</td><tr>";
-										}
+                      echo "<tr><td style='color:#698975'>Discount Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['dis_amount']."</td><tr>";
+                    }
                                         if ($row_form4_search['payment_date'] != NULL){
-											echo "<tr><td style='color:#698975'>Payment Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_date']."</td><tr>";
-										}
-										if ($row_form4_search['payment_method'] != NULL){
-											echo "<tr><td style='color:#698975'>Payment Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_method']."</td><tr>";
-										}
-										if ($row_form4_search['alt_no'] != NULL){
-											echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['alt_no']."</td><tr>";
-										}
-										if ($row_form4_search['agent_message'] != NULL){
-											echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['agent_message']."</td><tr>";
-										}
-									}
-								?>
+                      echo "<tr><td style='color:#698975'>Payment Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_date']."</td><tr>";
+                    }
+                    if ($row_form4_search['payment_method'] != NULL){
+                      echo "<tr><td style='color:#698975'>Payment Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_method']."</td><tr>";
+                    }
+                    if ($row_form4_search['alt_no'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['alt_no']."</td><tr>";
+                    }
+                    if ($row_form4_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['agent_message']."</td><tr>";
+                    }
+                  }
+                ?>
                                 </table>
                                 <div class="block-content collapse in">
                               <?php 
-							  if ($totalRows_ticket_status>0){
-							  do { ?>
+                if ($totalRows_ticket_status>0){
+                do { ?>
                               <div class="span10" style="margin:5px; background:#0093B1; border-radius:5px">
                                   <div style="padding:10px">
                                     <h6 style="color:#333;"><em style="color:white"><?php echo $row_ticket_status['username']; ?></em>  on 
@@ -570,14 +566,14 @@ $totalRows_form4_search = $form4_search->num_rows;
                                   </div>
                               </div>
                                 <?php } while ($row_ticket_status = $ticket_status->fetch_assoc());
-							  }
-								 ?>
+                }
+                 ?>
                              
                              <div class="span10">  
-                             		<div class="row-fluid">
- 										<div class="block-content collapse in">
+                                <div class="row-fluid">
+                    <div class="block-content collapse in">
                                         <form method="POST" name="comment" action="<?php echo $editFormAction; ?>">
-                                        	<label>Place your comment</label>
+                                          <label>Place your comment</label>
                                             <textarea name="comment" class="span12" required></textarea><br>
                                           <p align="right">
                                             <button type="submit" class="btn btn-primary" name="insert">Submit</button>
@@ -592,52 +588,52 @@ $totalRows_form4_search = $form4_search->num_rows;
                                 </div>
                                 <div class="span4">
                                 <h5 style="text-align:center; color:#666">PROGRESS STATISTIC</h5>
-                                	<div class="progress <?php if($row_query_progress['progress']<=50)
-															{
-																echo "progress-danger";	
-															} elseif ($row_query_progress['progress'] <100)
-															{
-																echo "progress-warning";	
-															} elseif ($row_query_progress['progress'] ==100)
-															{
-																echo "progress-success";	
-															}
-														 ?>">
-										<div style="width: <?php echo $row_query_progress['progress']; ?>%;" class="bar"><?php echo $row_query_progress['progress']; ?>% Complete</div>
-									</div>
+                                  <div class="progress <?php if($row_query_progress['progress']<=50)
+                              {
+                                echo "progress-danger"; 
+                              } elseif ($row_query_progress['progress'] <100)
+                              {
+                                echo "progress-warning";  
+                              } elseif ($row_query_progress['progress'] ==100)
+                              {
+                                echo "progress-success";  
+                              }
+                             ?>">
+                    <div style="width: <?php echo $row_query_progress['progress']; ?>%;" class="bar"><?php echo $row_query_progress['progress']; ?>% Complete</div>
+                  </div>
                                         <form method="POST" action="<?php echo $editFormAction; ?>" name="progress">
-                                        	<input type="number" min="0" max="100" maxlength="3" name="progress" value="<?php echo $row_query_progress['progress']; ?>">%
+                                          <input type="number" min="0" max="100" maxlength="3" name="progress" value="<?php echo $row_query_progress['progress']; ?>">%
                                           <button type="submit" name="prog_update" class="btn btn-small">Update</button>
                                             <input type="hidden" name="MM_insert" value="progress">
                                         </form>
                                         <hr>
                                   <form action="<?php echo $editFormAction; ?>" method="POST" name="dead">
-                                        	<h5 style="text-align:center; color:#666">SET/CHANGE THE DEADLINE</h5>
+                                          <h5 style="text-align:center; color:#666">SET/CHANGE THE DEADLINE</h5>
                                             <input type="hidden" name="ticket_id" value="<?php echo $t_id ?>">
                                             <input type="date" name="deadline">
                                             <input type="submit" name="set_deadline" class="btn btn-small">
                                             <input type="hidden" name="MM_update" value="dead">
                                     </form>
                                   <h4>Who are engaged?</h4>
-                                        	<?php
-											if ($totalRows_search_assignee!=0) {
-											 do { ?>
-                                       	    <form method="POST" action="../remove.php">
-                                        	    <i class="icon-hand-right"></i><?php echo $row_search_assignee['username'];?>
-                                        	    <input type="hidden" name="user" value="<?php echo $row_search_assignee['username'];?>">
-                                        	    <input type="hidden" name="ticket" value="<?php echo $t_id; ?>">
-                                        	    <input type="hidden" name="skill" value="<?php echo $_GET['skill']; ?>">
-                                        	    <input type="submit" value="Remove" name="Remove" class="btn btn-mini btn-danger">
-                                        	    </form>
-                                        	  <?php 
-											  } while ($row_search_assignee = $search_assignee->fetch_assoc());
-											} else echo "<p style='color:red'>No one assigned</p>"
-											   ?>
+                                          <?php
+                      if ($totalRows_search_assignee!=0) {
+                       do { ?>
+                                            <form method="POST" action="../remove.php">
+                                              <i class="icon-hand-right"></i><?php echo $row_search_assignee['username'];?>
+                                              <input type="hidden" name="user" value="<?php echo $row_search_assignee['username'];?>">
+                                              <input type="hidden" name="ticket" value="<?php echo $t_id; ?>">
+                                              <input type="hidden" name="skill" value="<?php echo $_GET['skill']; ?>">
+                                              <input type="submit" value="Remove" name="Remove" class="btn btn-mini btn-danger">
+                                              </form>
+                                            <?php 
+                        } while ($row_search_assignee = $search_assignee->fetch_assoc());
+                      } else echo "<p style='color:red'>No one assigned</p>"
+                         ?>
                                         <hr>
-                           		  <h4>You may assign these people</h4>
+                                <h4>You may assign these people</h4>
                                         <?php 
-										if ($totalRows_usre>0){
-										do { ?>
+                    if ($totalRows_usre>0){
+                    do { ?>
                                   <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
                                             <i class="icon-hand-right"></i>&nbsp;<?php echo $row_usre['username']; ?>&nbsp;
                                             <input type="hidden" name="username" value="<?php echo $row_usre['username'];?>">
@@ -649,11 +645,11 @@ $totalRows_form4_search = $form4_search->num_rows;
                                             <input type="hidden" name="MM_update" value="assign">
                                         </form>
                                           <?php } while ($row_usre = $usre->fetch_assoc());
-										 } elseif ($_GET['skill']==201){
-											 	 if ($totalRows_g_201_user==0){
-													echo "<p style='color:red'>No One</p>";	
-												} else {
-										?>
+                     } elseif ($_GET['skill']==201){
+                         if ($totalRows_g_201_user==0){
+                          echo "<p style='color:red'>No One</p>"; 
+                        } else {
+                    ?>
                                         <?php do { ?>
                                         <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
                                                     <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_201_user['username']; ?>&nbsp;
@@ -667,15 +663,15 @@ $totalRows_form4_search = $form4_search->num_rows;
                                                     </form>
                                                   <?php } while ($row_g_201_user = $g_201_user->fetch_assoc()); ?>
 <?php 
-										 
-										}
-												}
-												
-										elseif ($_GET['skill']==202){
-											 	 if ($totalRows_g_202_user==0){
-													echo "<p style='color:red'>No One</p>";	
-												} else {
-										?>
+                     
+                    }
+                        }
+                        
+                    elseif ($_GET['skill']==202){
+                         if ($totalRows_g_202_user==0){
+                          echo "<p style='color:red'>No One</p>"; 
+                        } else {
+                    ?>
                                         <?php do { ?>
                                         <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
                                                     <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_202_user['username']; ?>&nbsp;
@@ -689,15 +685,15 @@ $totalRows_form4_search = $form4_search->num_rows;
                                                     </form>
                                                   <?php } while ($row_g_202_user = $g_202_user->fetch_assoc()); ?>
 <?php 
-										 
-										}
-												}
-												
-										elseif ($_GET['skill']==203){
-											 	 if ($totalRows_g_203_user==0){
-													echo "<p style='color:red'>No One</p>";	
-												} else {
-										?>
+                     
+                    }
+                        }
+                        
+                    elseif ($_GET['skill']==203){
+                         if ($totalRows_g_203_user==0){
+                          echo "<p style='color:red'>No One</p>"; 
+                        } else {
+                    ?>
                                         <?php do { ?>
                                         <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
                                                     <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_203_user['username']; ?>&nbsp;
@@ -711,15 +707,15 @@ $totalRows_form4_search = $form4_search->num_rows;
                                                     </form>
                                                   <?php } while ($row_g_203_user = $g_203_user->fetch_assoc()); ?>
 <?php 
-										 
-										}
-												}
-												
-										elseif ($_GET['skill']==204){
-											 	 if ($totalRows_g_204_user==0){
-													echo "<p style='color:red'>No One</p>";	
-												} else {
-										?>
+                     
+                    }
+                        }
+                        
+                    elseif ($_GET['skill']==204){
+                         if ($totalRows_g_204_user==0){
+                          echo "<p style='color:red'>No One</p>"; 
+                        } else {
+                    ?>
                                         <?php do { ?>
                                         <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
                                                     <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_204_user['username']; ?>&nbsp;
@@ -733,13 +729,13 @@ $totalRows_form4_search = $form4_search->num_rows;
                                                     </form>
                                                   <?php } while ($row_g_204_user = $g_204_user->fetch_assoc()); ?>
 <?php 
-										 
-										}
-												}
-										 else {
-											 echo "<p style='color:red'>No user.</p>";
-										 }
-										   ?>
+                     
+                    }
+                        }
+                     else {
+                       echo "<p style='color:red'>No user.</p>";
+                     }
+                       ?>
                                 </div>
                             </div>
                         </div>
@@ -769,12 +765,12 @@ $totalRows_form4_search = $form4_search->num_rows;
         
         <!--/.fluid-container-->
         <script src="../vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    <script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
-		<script src="../vendors/ckeditor/ckeditor.js"></script>
-		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
+    <script src="../vendors/ckeditor/ckeditor.js"></script>
+    <script src="../vendors/ckeditor/adapters/jquery.js"></script>
 
-		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
         <script>
         $(function() {
             // Bootstrap
@@ -782,41 +778,41 @@ $totalRows_form4_search = $form4_search->num_rows;
 
             // Ckeditor standard
             $( 'textarea#ckeditor_standard' ).ckeditor({width:'98%', height: '150px', toolbar: [
-				{ name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', '-', 'Templates' ] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
-				[ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],			// Defines toolbar group without name.
-				{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] }
-			]});
+        { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', '-', 'Templates' ] }, // Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+        [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],      // Defines toolbar group without name.
+        { name: 'basicstyles', items: [ 'Bold', 'Italic' ] }
+      ]});
             $( 'textarea#ckeditor_full' ).ckeditor({width:'98%', height: '150px'});
         });
 
         // Tiny MCE
         tinymce.init({
-		    selector: "#tinymce_basic",
-		    plugins: [
-		        "advlist autolink lists link image charmap print preview anchor",
-		        "searchreplace visualblocks code fullscreen",
-		        "insertdatetime media table contextmenu paste"
-		    ],
-		    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-		});
+        selector: "#tinymce_basic",
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+    });
 
-		// Tiny MCE
+    // Tiny MCE
         tinymce.init({
-		    selector: "#tinymce_full",
-		    plugins: [
-		        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-		        "searchreplace wordcount visualblocks visualchars code fullscreen",
-		        "insertdatetime media nonbreaking save table contextmenu directionality",
-		        "emoticons template paste textcolor"
-		    ],
-		    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-		    toolbar2: "print preview media | forecolor backcolor emoticons",
-		    image_advtab: true,
-		    templates: [
-		        {title: 'Test template 1', content: 'Test 1'},
-		        {title: 'Test template 2', content: 'Test 2'}
-		    ]
-		});
+        selector: "#tinymce_full",
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons template paste textcolor"
+        ],
+        toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+        toolbar2: "print preview media | forecolor backcolor emoticons",
+        image_advtab: true,
+        templates: [
+            {title: 'Test template 1', content: 'Test 1'},
+            {title: 'Test template 2', content: 'Test 2'}
+        ]
+    });
 
         </script>
     </body>

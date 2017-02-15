@@ -1,35 +1,36 @@
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+<?php 
+
+require '../Connections/conn.php';
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+    function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+    {
+      if (PHP_VERSION < 6) {
+        $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+      }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+      $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+      switch ($theType) {
+        case "text":
+          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+          break;    
+        case "long":
+        case "int":
+          $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+          break;
+        case "double":
+          $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+          break;
+        case "date":
+          $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+          break;
+        case "defined":
+          $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+          break;
+      }
+      return $theValue;
+    }
   }
-  return $theValue;
-}
-}
 
 //mysql_select_db($database_conn, $conn);
 $query_g_1 = "SELECT * FROM ticket WHERE skill_id = '201' AND status != 2";
@@ -77,7 +78,7 @@ $totalRows_g_4 = $g_4->num_rows;
 
 
 //mysql_select_db($database_conn, $conn);
-$query_g_4_closed = "SELECT * FROM ticket WHERE skill_id = '204' AND status != 2";
+$query_g_4_closed = "SELECT * FROM ticket WHERE skill_id = '204' AND status = 2";
 $g_4_closed = $conn->query($query_g_4_closed) or die(mysql_error());
 $row_g_4_closed = $g_4_closed->fetch_assoc();
 $totalRows_g_4_closed = $g_4_closed->num_rows;
@@ -226,9 +227,7 @@ include "getmessage.php";
                         <li>
                             <a href="mydepartment.php?skill=<?php echo $_SESSION['skill']; ?>"> My Group</a>
                         </li>
-                        <li>
-                            <a href="ct.php?skill=<?php echo $_SESSION['skill']; ?>"><span class="badge badge-warning pull-right"><?php echo $totalRows_dept_closed ?></span> Closed</a>
-                        </li>
+                    </ul>    
                 </div>
                 <!--/span-->
                 <div class="span9" id="content">

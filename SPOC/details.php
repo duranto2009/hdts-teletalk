@@ -1,12 +1,14 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+
+
+require ('../scripts/islogin.php');
+require ('../scripts/Connection/connection.php');
+
+
 $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
 $res = $conn->query($sql);
 $num = $res->num_rows;
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+
 
 // ** Logout the current user. **
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
@@ -38,7 +40,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -82,7 +84,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "comment")) {
                        GetSQLValueString($_POST['comment'], "text"));
 
   //mysql_select_db($database_conn, $conn);
-  $Result1 = $conn->query($insertSQL) or die(mysql_error());
+  $Result1 = $conn->query($insertSQL);
 
 
 }
@@ -112,6 +114,8 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "close")) {
   header(sprintf("Location: %s", $updateGoTo));
 }
 
+//ASSIGN PEOPLE IN THE TICKET
+
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "assign")) {
   $updateSQL = sprintf("UPDATE ticket SET status=%s WHERE ticket_id=%s",
                        GetSQLValueString($_POST['status'], "int"),
@@ -121,6 +125,8 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "assign")) {
   $Result1 = $conn->query($updateSQL) or die(mysql_error());
 
 }
+
+/*---------------------------------------------------------------------------*/
 
 if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "dead")) {
   $updateSQL = sprintf("UPDATE ticket SET deadline=%s WHERE ticket_id=%s",
@@ -140,14 +146,44 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "dead")) {
 }
 
 //$unicode=$_GET['_t'].$_POST['username'];
+
+//ASSIGN PEOPLE IN THE TICKET
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "assign")) {
   $insertSQL = sprintf("INSERT INTO assignee (username, ticket_id, spoc, date) VALUES (%s, '$t_id', %s, now())",
                        GetSQLValueString($_POST['username'], "text"),
                        GetSQLValueString($_POST['spoc'], "text"));
 
+
+	//SEND MAIL
+		$to = "{$_POST['user_email']}";
+
+
+		$subject = "Ticket#{$_POST['email_subject']}";
+
+		$message = "<html>
+						<body>
+						    <h4>Dear Concern</h4>
+
+		                    <h4>A Ticket Has been assigned to you by &nbsp;&nbsp;".$_POST['spoc'].
+		                    "</h4><h4>Ticket ID::&nbsp;&nbsp;".$t_id."</h4>
+		                	<h3>Please <a href='http://103.230.107.240' target='_blank'>Login</a> to View More<h3>	
+		                </body>
+		            </html>";
+
+		// Always set content-type when sending HTML email
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+		// More headers
+		$headers .= 'From:crm.ticket@teletalk.com.bd' . "\r\n";
+		mail($to,$subject,$message,$headers);
+	//Mail SENDING ENDS HERE
+
   //mysql_select_db($database_conn, $conn);
   $Result1 = $conn->query($insertSQL) or die(mysql_error());
 }
+
+
 
 
 $colname_search_assignee = "-1";
@@ -372,9 +408,6 @@ include "getmessage.php";
                         <li>
                             <a href="mydepartment.php?skill=<?php echo $_SESSION['skill']; ?>"> My Group</a>
                         </li>
-                        <li>
-                            <a href="ct.php?skill=<?php echo $_SESSION['skill']; ?>"><span class="badge badge-warning pull-right"><?php echo $totalRows_dept_closed ?></span> Closed</a>
-                        </li>
                     </ul>
                 </div>
                 <!--/span-->
@@ -401,6 +434,8 @@ include "getmessage.php";
                                		<input type="hidden" name="MM_update" value="close">
                                 </form>
                                 <hr>
+
+
                                 <div class="span12">
                                 <table style="font-weight:bold; text-align:right" cellpadding="2px">
                                 <?php 
@@ -625,7 +660,7 @@ include "getmessage.php";
                              <div class="span10">  
                              		<div class="row-fluid">
  										<div class="block-content collapse in">
-                                        <form method="POST" name="comment" action="<?php echo $editFormAction; ?>">
+                                        <form method="POST" name="comment2" action="<?php echo $editFormAction; ?>">
                                         	<label>Place your comment</label>
                                             <textarea name="comment" class="span12" required></textarea><br>
                                           <p align="right">
@@ -640,6 +675,7 @@ include "getmessage.php";
                                 </div>
                                 </div>
                                 <div class="span4">
+                <!--PROGRESS STATICTICS-->                
                                 <h5 style="text-align:center; color:#666">PROGRESS STATISTIC</h5>
                                 	<div class="progress <?php if($row_query_progress['progress']<=50)
 															{
@@ -660,13 +696,16 @@ include "getmessage.php";
                                             <input type="hidden" name="MM_insert" value="progress">
                                         </form>
                                         <hr>
-                                  <form action="<?php echo $editFormAction; ?>" method="POST" name="dead">
-                                        	<h5 style="text-align:center; color:#666">SET/CHANGE THE DEADLINE</h5>
-                                            <input type="hidden" name="ticket_id" value="<?php echo $t_id ?>">
-                                            <input type="date" name="deadline">
-                                            <input type="submit" name="set_deadline" class="btn btn-small">
-                                            <input type="hidden" name="MM_update" value="dead">
-                                    </form>
+                <!--DEADLINE-->                        
+									<form action="<?php echo $editFormAction; ?>" method="POST" name="dead">
+									    	<h5 style="text-align:center; color:#666">SET/CHANGE THE DEADLINE</h5>
+									        <input type="hidden" name="ticket_id" value="<?php echo $t_id ?>">
+									        <input type="date" name="deadline">
+									        <input type="submit" name="set_deadline" class="btn btn-small">
+									        <input type="hidden" name="MM_update" value="dead">
+									</form>
+
+                <!--Engaged PEOPLE IN THE MAIL-->       
                                   <h4>Who are engaged?</h4>
                                         	<?php
 											if ($totalRows_search_assignee!=0) {
@@ -683,36 +722,63 @@ include "getmessage.php";
 											} else echo "<p style='color:red'>No one assigned</p>"
 											   ?>
                                         <hr>
-                           		  <h4>You may assign these people</h4>
+
+				<!--ASSIGNING PEOPLE IN THE MAIL-->
+                           		  		<h4>You may assign these people</h4>
                                         <?php 
-										if ($totalRows_usre>0){
-										do { ?>
-                                  <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
-                                            <i class="icon-hand-right"></i>&nbsp;<?php echo $row_usre['username']; ?>&nbsp;
-                                            <input type="hidden" name="username" value="<?php echo $row_usre['username'];?>">
-                                            <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
-                                            <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
-                                            <input type="hidden" name="status" value="1">
-                                            <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
-                                            <input type="hidden" name="MM_insert" value="assign">
-                                            <input type="hidden" name="MM_update" value="assign">
-                                        </form>
-                                          <?php } while ($row_usre = $usre->fetch_assoc());
-										 } elseif ($_GET['skill']==201){
-											 	 if ($totalRows_g_201_user==0){
-													echo "<p style='color:red'>No One</p>";	
-												} else {
+											if ($totalRows_usre>0){
+											do { 
 										?>
+
+			                                        <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
+			                                            <i class="icon-hand-right"></i>&nbsp;<?php echo $row_usre['username']; ?>&nbsp;
+			                                            <input type="hidden" name="username" value="<?php echo $row_usre['username'];?>">
+
+			                                            <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
+			                                            <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
+			                                            <input type="hidden" name="status" value="1">
+			                                            <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
+			                                            <input type="hidden" name="MM_insert" value="assign">
+			                                            <input type="hidden" name="MM_update" value="assign">
+
+			                                            <!--User Email-->
+			                                            <input type="hidden" name="user_email" value="<?php echo $row_usre['user_email'];?>">
+			                                        </form>
+
+                                            <?php
+	                                           	} while ($row_usre = $usre->fetch_assoc());
+											 } elseif ($_GET['skill']==201){
+												 	 if ($totalRows_g_201_user==0){
+														echo "<p style='color:red'>No One</p>";	
+													} else {
+											?>
                                         <?php do { ?>
-                                        <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
-                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_201_user['username']; ?>&nbsp;
-                                                    <input type="hidden" name="username" value="<?php echo $row_g_201_user['username']; ?>">
-                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
-                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
-                                                    <input type="hidden" name="MM_insert" value="assign">
-                                                    <input type="hidden" name="MM_update" value="assign">
+                                        			<form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
+	                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_201_user['username']; ?>&nbsp;
+	                                                    <input type="hidden" name="username" value="<?php echo $row_g_201_user['username']; ?>">
+	                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
+	                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
+	                                                    <input type="hidden" name="status" value="1">
+	                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
+	                                                    <input type="hidden" name="MM_insert" value="assign">
+	                                                    <input type="hidden" name="MM_update" value="assign">
+
+	                                                    <?php
+	                                                    	$email_username=$row_g_201_user['username'];
+ 															$send_email="SELECT user_email from user WHERE username='$email_username' ";
+ 															$send_email_execute=$conn->query($send_email);
+ 															$send_email_row=$send_email_execute->fetch_assoc();
+	                                                    ?>
+	                                                   
+
+	                                                    <!--User Email-->
+	                                            		<input type="hidden" name="user_email" value="<?php echo $send_email_row['user_email'];?>">
+
+	                                            		<!--EMAIL SUBJECT-->
+	                                            		<input type="hidden" name="email_subject" value="<?php echo $row_query_ticket['subject']; ?>">
+	                                            		
+
+
                                                     </form>
                                                   <?php } while ($row_g_201_user = $g_201_user->fetch_assoc()); ?>
 <?php 
@@ -726,15 +792,32 @@ include "getmessage.php";
 												} else {
 										?>
                                         <?php do { ?>
-                                        <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
-                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_202_user['username']; ?>&nbsp;
-                                                    <input type="hidden" name="username" value="<?php echo $row_g_202_user['username']; ?>">
-                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
-                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
-                                                    <input type="hidden" name="MM_insert" value="assign">
-                                                    <input type="hidden" name="MM_update" value="assign">
+                                        			<form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
+	                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_202_user['username']; ?>&nbsp;
+	                                                    <input type="hidden" name="username" value="<?php echo $row_g_202_user['username']; ?>">
+	                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
+	                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
+	                                                    <input type="hidden" name="status" value="1">
+	                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
+	                                                    <input type="hidden" name="MM_insert" value="assign">
+	                                                    <input type="hidden" name="MM_update" value="assign">
+
+
+	                                                    <?php
+	                                                    	$email_username=$row_g_202_user['username'];
+ 															$send_email="SELECT user_email from user WHERE username='$email_username'";
+ 															$send_email_execute=$conn->query($send_email);
+ 															$send_email_row=$send_email_execute->fetch_assoc();
+	                                                    ?>
+	                                                   
+
+	                                                    <!--User Email-->
+	                                            		<input type="hidden" name="user_email" value="<?php echo $send_email_row['user_email'];?>">
+
+	                                            		<!--EMAIL SUBJECT-->
+	                                            		<input type="hidden" name="email_subject" value="<?php echo $row_query_ticket['subject']; ?>">
+	                                            		
+
                                                     </form>
                                                   <?php } while ($row_g_202_user = $g_202_user->fetch_assoc()); ?>
 <?php 
@@ -748,15 +831,31 @@ include "getmessage.php";
 												} else {
 										?>
                                         <?php do { ?>
-                                        <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
-                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_203_user['username']; ?>&nbsp;
-                                                    <input type="hidden" name="username" value="<?php echo $row_g_203_user['username']; ?>">
-                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
-                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
-                                                    <input type="hidden" name="MM_insert" value="assign">
-                                                    <input type="hidden" name="MM_update" value="assign">
+                                        			<form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
+	                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_203_user['username']; ?>&nbsp;
+	                                                    <input type="hidden" name="username" value="<?php echo $row_g_203_user['username']; ?>">
+	                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
+	                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
+	                                                    <input type="hidden" name="status" value="1">
+	                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
+	                                                    <input type="hidden" name="MM_insert" value="assign">
+	                                                    <input type="hidden" name="MM_update" value="assign">
+
+	                                                    <?php
+	                                                    	$email_username=$row_g_203_user['username'];
+ 															$send_email="SELECT user_email from user WHERE username='$email_username'";
+ 															$send_email_execute=$conn->query($send_email);
+ 															$send_email_row=$send_email_execute->fetch_assoc();
+	                                                    ?>
+	                                                   
+
+	                                                    <!--User Email-->
+	                                            		<input type="hidden" name="user_email" value="<?php echo $send_email_row['user_email'];?>">
+
+	                                            		<!--EMAIL SUBJECT-->
+	                                            		<input type="hidden" name="email_subject" value="<?php echo $row_query_ticket['subject']; ?>">
+	                                            			
+
                                                     </form>
                                                   <?php } while ($row_g_203_user = $g_203_user->fetch_assoc()); ?>
 <?php 
@@ -770,15 +869,31 @@ include "getmessage.php";
 												} else {
 										?>
                                         <?php do { ?>
-                                        <form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
-                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_204_user['username']; ?>&nbsp;
-                                                    <input type="hidden" name="username" value="<?php echo $row_g_204_user['username']; ?>">
-                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
-                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
-                                                    <input type="hidden" name="status" value="1">
-                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
-                                                    <input type="hidden" name="MM_insert" value="assign">
-                                                    <input type="hidden" name="MM_update" value="assign">
+                                        			<form action="<?php echo $editFormAction; ?>" method="POST" name="assign">
+	                                                    <i class="icon-hand-right"></i>&nbsp;<?php echo $row_g_204_user['username']; ?>&nbsp;
+	                                                    <input type="hidden" name="username" value="<?php echo $row_g_204_user['username']; ?>">
+	                                                    <input type="hidden" name="spoc" value="<?php echo $_SESSION['username'];?>">
+	                                                    <input type="hidden" name="ticket_id" value="<?php echo $t_id;?>">
+	                                                    <input type="hidden" name="status" value="1">
+	                                                    <button type="submit" name="assign" class="btn btn-mini btn-success">Assign</button>
+	                                                    <input type="hidden" name="MM_insert" value="assign">
+	                                                    <input type="hidden" name="MM_update" value="assign">
+	                                                    
+
+	                                                    <?php
+	                                                    	$email_username=$row_g_204_user['username'];
+ 															$send_email="SELECT user_email from user WHERE username='$email_username'";
+ 															$send_email_execute=$conn->query($send_email);
+ 															$send_email_row=$send_email_execute->fetch_assoc();
+	                                                    ?>
+	                                                   
+	                                                    <!--User Email-->
+	                                            		<input type="hidden" name="user_email" value="<?php echo $send_email_row['user_email'];?>">
+
+	                                            		<!--EMAIL SUBJECT-->
+	                                            		<input type="hidden" name="email_subject" value="<?php echo $row_query_ticket['subject']; ?>">
+	                                            		
+
                                                     </form>
                                                   <?php } while ($row_g_204_user = $g_204_user->fetch_assoc()); ?>
 <?php 
@@ -810,20 +925,15 @@ include "getmessage.php";
 
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
         
         <!--/.fluid-container-->
         <script src="../vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
-		<script src="../vendors/ckeditor/ckeditor.js"></script>
-		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
+    		<script src="../vendors/ckeditor/ckeditor.js"></script>
+    		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
 
-		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
+    		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
         <script>
         $(function() {
             // Bootstrap

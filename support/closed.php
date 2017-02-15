@@ -1,44 +1,45 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
-$res = $conn->query($sql);
-$num = $res->num_rows;
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+    require '../scripts/islogin.php';
+    require '../scripts/Connection/connection.php';
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
+    $sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
+    $res = $conn->query($sql);
+    $num = $res->num_rows;
 
-$username = $_SESSION['username'];
+
+    if (!function_exists("GetSQLValueString")) {
+        function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+        {
+          if (PHP_VERSION < 6) {
+            $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+          }
+
+          //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+          switch ($theType) {
+            case "text":
+              $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+              break;    
+            case "long":
+            case "int":
+              $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+              break;
+            case "double":
+              $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+              break;
+            case "date":
+              $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+              break;
+            case "defined":
+              $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+              break;
+          }
+          return $theValue;
+        }
+    }
+
+    $username = $_SESSION['username'];
 
     //mysql_select_db($database_conn, $conn);
     $query_closed_ticket = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
@@ -129,12 +130,10 @@ $username = $_SESSION['username'];
                 <div class="span3" id="sidebar">
                     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
                         <li>
-                            <a href="index.php"> Dashboard</a>
+                            <a href="index.php?skill=<?php echo $_GET['skill']; ?>"> Dashboard</a>
                         </li>
                         <li class="active">
                             <a href="closed.php?skill=<?php echo $_GET['skill']; ?>"><span class="badge badge-warning pull-right"><?php echo $num; ?></span> Closed Tickets</a>
-                        <li>
-                            <a href="#"> Logs</a>
                         </li>
                     </ul>
                 </div>
@@ -208,14 +207,9 @@ $username = $_SESSION['username'];
 
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
 
 </html>
 <?php
-$closed_ticket->free_result();
+    $closed_ticket->free_result();
 ?>

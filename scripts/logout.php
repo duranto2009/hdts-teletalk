@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include 'Connection/connection.php';
+require 'Connection/connection.php';
 
 $username = $_SESSION['username'];
 $date = date("Y-m-d h:i:s");

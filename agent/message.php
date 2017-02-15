@@ -1,4 +1,6 @@
-<?php include '../scripts/islogin.php'; 
+<?php 
+
+require '../scripts/islogin.php'; 
 $instance = "m".time();
 ?>
 
@@ -107,25 +109,19 @@ $instance = "m".time();
                 </div>
             </div>
             </div>
-      <hr>
+            <hr>
             <footer>
                 <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
             </footer>
         </div>
         <!--/.fluid-container-->
 
-<script src="../vendors/jquery-1.9.1.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
-<script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../vendors/jquery-1.9.1.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+        <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
 
 
-<script src="../assets/scripts.js"></script>
-<script src="../assets/DT_bootstrap.js"></script>
-<script>
-        $(function() {
-            
-        });
-        </script>
-</body>
-
+        <script src="../assets/scripts.js"></script>
+        <script src="../assets/DT_bootstrap.js"></script>
+    </body>
 </html>

@@ -1,216 +1,214 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2";
-$res = $conn->query($sql);
-$num = $res->num_rows;
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+  require '../scripts/islogin.php';
+  require '../scripts/Connection/connection.php';
+  $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
+  $res = $conn->query($sql);
+  $num = $res->num_rows;
 
-// ** Logout the current user. **
-$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
-  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
-  //to fully log out a visitor we need to clear the session varialbles
-  $_SESSION['MM_Username'] = NULL;
-  $_SESSION['MM_UserGroup'] = NULL;
-  $_SESSION['PrevUrl'] = NULL;
-  unset($_SESSION['MM_Username']);
-  unset($_SESSION['MM_UserGroup']);
-  unset($_SESSION['PrevUrl']);
-	
-  $logoutGoTo = "../login.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
-}
-?>
-<?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  // ** Logout the current user. **
+  $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+  if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+    $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+  if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+    //to fully log out a visitor we need to clear the session varialbles
+    $_SESSION['MM_Username'] = NULL;
+    $_SESSION['MM_UserGroup'] = NULL;
+    $_SESSION['PrevUrl'] = NULL;
+    unset($_SESSION['MM_Username']);
+    unset($_SESSION['MM_UserGroup']);
+    unset($_SESSION['PrevUrl']);
+  	
+    $logoutGoTo = "../login.php";
+    if ($logoutGoTo) {
+      header("Location: $logoutGoTo");
+      exit;
+    }
   }
-  return $theValue;
-}
-}
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-$editFormAction = $_SERVER['PHP_SELF'];
-
-$username = $_SESSION['username'];
-$date = date('Y-m-d').time('H:i:s');
-$t_id = $_GET['_t'];
-
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "comment")) {
-  $insertSQL = sprintf("INSERT INTO ticket_status (ticket_id,comment,date,username) VALUES ('$t_id',%s,now(),'$username')",
-                       GetSQLValueString($_POST['comment'], "text"));
-
-
-  //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($insertSQL) or die(mysql_error());
-
-
-}
-
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "close")) {
-  $updateSQL = sprintf("UPDATE ticket SET status=1 WHERE ticket_id='$t_id'",
-                       GetSQLValueString($_POST['status'], "int"),
-                       GetSQLValueString($_POST['status'], "text"));
 
 
 
-  //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($updateSQL) or die(mysql_error());
+  if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
 
+    //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+  }
 
-  $updateGoTo = "index.php";
+  $editFormAction = $_SERVER['PHP_SELF'];
   if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
-    $updateGoTo .= $_SERVER['QUERY_STRING'];
+    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
   }
-  header(sprintf("Location: %s", $updateGoTo));
-}
 
-$colname_search_assignee = "-1";
-if (isset($_GET['_t'])) {
-  $colname_search_assignee = $_GET['_t'];
-}
+  $editFormAction = $_SERVER['PHP_SELF'];
 
+  $username = $_SESSION['username'];
+  $date = date('Y-m-d').time('H:i:s');
+  $t_id = $_GET['_t'];
 
-//mysql_select_db($database_conn, $conn);
-$query_search_assignee = sprintf("SELECT * FROM assignee WHERE ticket_id = %s", GetSQLValueString($colname_search_assignee, "text"));
-$search_assignee = $conn->query($query_search_assignee) or die(mysql_error());
-$row_search_assignee = $search_assignee->fetch_assoc();
-$totalRows_search_assignee = $search_assignee->num_rows;
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+  }
 
-
-
-$colname_query_ticket = "-1";
-if (isset($_GET['_t'])) {
-  $colname_query_ticket = $_GET['_t'];
-}
+  if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "comment")) {
+    $insertSQL = sprintf("INSERT INTO ticket_status (ticket_id,comment,date,username) VALUES ('$t_id',%s,now(),'$username')",
+                         GetSQLValueString($_POST['comment'], "text"));
 
 
-//mysql_select_db($database_conn, $conn);
-$query_query_ticket = sprintf("SELECT * FROM ticket WHERE ticket_id = %s", GetSQLValueString($colname_query_ticket, "text"));
-$query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
-$row_query_ticket = $query_ticket->fetch_assoc();
-$totalRows_query_ticket = $query_ticket->num_rows;
+    //mysql_select_db($database_conn, $conn);
+    $Result1 =  $conn->query($insertSQL) or die(mysql_error());
+
+
+  }
+
+  if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "close")) {
+    $updateSQL = sprintf("UPDATE ticket SET status=1 WHERE ticket_id='$t_id'",
+                         GetSQLValueString($_POST['status'], "int"),
+                         GetSQLValueString($_POST['status'], "text"));
 
 
 
-$colname_query_progress = "-1";
-if (isset($_GET['_t'])) {
-  $colname_query_progress = $_GET['_t'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_query_progress = sprintf("SELECT progress FROM progress WHERE ticket_id = %s ORDER BY `date` DESC", GetSQLValueString($colname_query_progress, "text"));
-$query_progress =  $conn->query($query_query_progress) or die(mysql_error());
-$row_query_progress = $query_progress->fetch_assoc();
-$totalRows_query_progress = $query_progress->num_rows;
-
-
-//mysql_select_db($database_conn, $conn);
-$query_ticket_status = sprintf("SELECT * FROM ticket_status WHERE ticket_id = '$t_id' ORDER BY date ASC");
-$ticket_status =  $conn->query($query_ticket_status) or die(mysql_error());
-$row_ticket_status = $ticket_status->fetch_assoc();
-$totalRows_ticket_status = $ticket_status->num_rows;
-
-
-$colname_form1_search = "-1";
-if (isset($_GET['_t'])) {
-  $colname_form1_search = $_GET['_t'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_form1_search = "SELECT * FROM form1 WHERE ticket_id = '$t_id'";
-$form1_search =  $conn->query($query_form1_search) or die(mysql_error());
-$row_form1_search = $form1_search->fetch_assoc();
-$totalRows_form1_search = $form1_search->num_rows;
+    //mysql_select_db($database_conn, $conn);
+    $Result1 =  $conn->query($updateSQL) or die(mysql_error());
 
 
 
-//mysql_select_db($database_conn, $conn);
-$query_form2_search = "SELECT * FROM form2 WHERE ticket_id = '$t_id'";
-$form2_search =  $conn->query($query_form2_search) or die(mysql_error());
-$row_form2_search = $form2_search->fetch_assoc();
-$totalRows_form2_search = $form2_search->num_rows;
+    $updateGoTo = "index.php";
+    if (isset($_SERVER['QUERY_STRING'])) {
+      $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
+      $updateGoTo .= $_SERVER['QUERY_STRING'];
+    }
+    header(sprintf("Location: %s", $updateGoTo));
+  }
 
-//mysql_select_db($database_conn, $conn);
-$query_form3_search = "SELECT * FROM form3 WHERE ticket_id = '$t_id'";
-$form3_search =  $conn->query($query_form3_search) or die(mysql_error());
-$row_form3_search = $form3_search->fetch_assoc();
-$totalRows_form3_search = $form3_search->num_rows;
-
-//mysql_select_db($database_conn, $conn);
-$query_form4_search = "SELECT * FROM form4 WHERE ticket_id = '$t_id'";
-$form4_search =  $conn->query($query_form4_search) or die(mysql_error());
-$row_form4_search = $form4_search->fetch_assoc();
-$totalRows_form4_search = $form4_search->num_rows;
-
-if (isset($_GET['ins'])){
-$ins = $_GET['ins'];
+  $colname_search_assignee = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_search_assignee = $_GET['_t'];
+  }
 
 
-//mysql_select_db($database_conn, $conn);
-$query_message_view = "SELECT * FROM message WHERE instance = '$ins'";
-$message_view =  $conn->query($query_message_view) or die(mysql_error());
-$row_message_view = $message_view->fetch_assoc();
-$totalRows_message_view = $message_view->num_rows;
-
-
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_closed_ticket = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
-$closed_ticket =  $conn->query($query_closed_ticket) or die(mysql_error());
-$row_closed_ticket = $closed_ticket->fetch_assoc();
-$totalRows_closed_ticket = $closed_ticket->num_rows;
+  //mysql_select_db($database_conn, $conn);
+  $query_search_assignee = sprintf("SELECT * FROM assignee WHERE ticket_id = %s", GetSQLValueString($colname_search_assignee, "text"));
+  $search_assignee = $conn->query($query_search_assignee) or die(mysql_error());
+  $row_search_assignee = $search_assignee->fetch_assoc();
+  $totalRows_search_assignee = $search_assignee->num_rows;
 
 
 
-include "getmessage.php";
+  $colname_query_ticket = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_query_ticket = $_GET['_t'];
+  }
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_query_ticket = sprintf("SELECT * FROM ticket WHERE ticket_id = %s", GetSQLValueString($colname_query_ticket, "text"));
+  $query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
+  $row_query_ticket = $query_ticket->fetch_assoc();
+  $totalRows_query_ticket = $query_ticket->num_rows;
+
+
+
+  $colname_query_progress = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_query_progress = $_GET['_t'];
+  }
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_query_progress = sprintf("SELECT progress FROM progress WHERE ticket_id = %s ORDER BY `date` DESC", GetSQLValueString($colname_query_progress, "text"));
+  $query_progress =  $conn->query($query_query_progress) or die(mysql_error());
+  $row_query_progress = $query_progress->fetch_assoc();
+  $totalRows_query_progress = $query_progress->num_rows;
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_ticket_status = sprintf("SELECT * FROM ticket_status WHERE ticket_id = '$t_id' ORDER BY date ASC");
+  $ticket_status =  $conn->query($query_ticket_status) or die(mysql_error());
+  $row_ticket_status = $ticket_status->fetch_assoc();
+  $totalRows_ticket_status = $ticket_status->num_rows;
+
+
+  $colname_form1_search = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_form1_search = $_GET['_t'];
+  }
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form1_search = "SELECT * FROM form1 WHERE ticket_id = '$t_id'";
+  $form1_search =  $conn->query($query_form1_search) or die(mysql_error());
+  $row_form1_search = $form1_search->fetch_assoc();
+  $totalRows_form1_search = $form1_search->num_rows;
+
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form2_search = "SELECT * FROM form2 WHERE ticket_id = '$t_id'";
+  $form2_search =  $conn->query($query_form2_search) or die(mysql_error());
+  $row_form2_search = $form2_search->fetch_assoc();
+  $totalRows_form2_search = $form2_search->num_rows;
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form3_search = "SELECT * FROM form3 WHERE ticket_id = '$t_id'";
+  $form3_search =  $conn->query($query_form3_search) or die(mysql_error());
+  $row_form3_search = $form3_search->fetch_assoc();
+  $totalRows_form3_search = $form3_search->num_rows;
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form4_search = "SELECT * FROM form4 WHERE ticket_id = '$t_id'";
+  $form4_search =  $conn->query($query_form4_search) or die(mysql_error());
+  $row_form4_search = $form4_search->fetch_assoc();
+  $totalRows_form4_search = $form4_search->num_rows;
+
+  if (isset($_GET['ins'])){
+  $ins = $_GET['ins'];
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_message_view = "SELECT * FROM message WHERE instance = '$ins'";
+  $message_view =  $conn->query($query_message_view) or die(mysql_error());
+  $row_message_view = $message_view->fetch_assoc();
+  $totalRows_message_view = $message_view->num_rows;
+
+
+  }
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_closed_ticket = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
+  $closed_ticket =  $conn->query($query_closed_ticket) or die(mysql_error());
+  $row_closed_ticket = $closed_ticket->fetch_assoc();
+  $totalRows_closed_ticket = $closed_ticket->num_rows;
+
+
+
+  require 'getmessage.php';
 ?>
 
 <!DOCTYPE html>

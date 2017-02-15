@@ -1,27 +1,29 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 if (isset($_GET['_o'])){
-	if ($_GET['_o'] == 1) {
-		echo '<script language="javascript">';
-		echo 'alert("Informaion Sent.")';
-		echo '</script>';	
+		if ($_GET['_o'] == 1) {
+				echo '<script language="javascript">';
+				echo 'alert("Informaion Sent.")';
+				echo '</script>';	
+			}
 	}
-} 
+
 else {
 	echo "";
 }
+
 if (isset($_SESSION['username'])) {
 		if ($_SESSION['unit'] != 0){
-		echo $_SESSION['unit'];
-		header('location:login.php');
+				echo $_SESSION['unit'];
+				header('location:login.php');
+			}
 	}
-}
-?>
-<?php
+
 $time = date("l jS \of F Y h:i:s A");
 $t_id = date("Ymd").time().rand(0,1000);
 $agent = $_SESSION['username'];
+$full_name = $_SESSION['full_name'];
 $customer_no = "015".$_POST['customer_no'];
 $agent_message=$_POST['agent_message'];
 if (!isset($_POST['status'])){
@@ -46,11 +48,14 @@ if (isset($_POST['slave'])){
 		$skill=201;
 		$subject = "3G RELATED COMPLAIN | 3G SERVICE NOT WORKING";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,problem,set_m,error_m,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$problem', '$set_m', '$error_m', '$alt_m', '$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,problem,set_m,error_m,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$problem', '$set_m', '$error_m', '$alt_m', '$agent_message')";
 		
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+
+			include "mail_g201.php";
+		header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -71,10 +76,12 @@ if (isset($_POST['slave'])){
 		$subject = "3G RELATED COMPLAIN | 3G PACKAGE ACTIVATION";
 		
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,3g_pac,set_m,error_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$package', '$set_m', '$error_m', '$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,3g_pac,set_m,error_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$package', '$set_m', '$error_m', '$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -90,10 +97,12 @@ if (isset($_POST['slave'])){
 		$subject = "3G RELATED COMPLAIN | 3G PACKAGE DE-ACTIVATION";
 		
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,3g_pac,error_m, agent_message) VALUES ('', '$t_id','$package', '$error_m', '$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,3g_pac,error_m, agent_message) VALUES ( '$t_id','$package', '$error_m', '$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -111,10 +120,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "FNF OVER CHARGED";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('','$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form2 (id,ticket_id,amount,fnf,fnf_d,overc_p,agent_message) VALUES ('', '$t_id','$amount', '$fnf', '$fnf_d','$overc_p','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form2 (ticket_id,amount,fnf,fnf_d,overc_p,agent_message) VALUES ( '$t_id','$amount', '$fnf', '$fnf_d','$overc_p','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -131,10 +142,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "OTHER OVERCHARGED ISSUE";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form2 (id,ticket_id,amount,prob,alt_no,overc_p,agent_message) VALUES ('', '$t_id','$amount', '$problem', '$alt_no', '$overc_p','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form2 (ticket_id,amount,prob,alt_no,overc_p,agent_message) VALUES ( '$t_id','$amount', '$problem', '$alt_no', '$overc_p','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -152,10 +165,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "REFILL/RECHARGE BONUS";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form2 (id,ticket_id,amount,eleg_offer,alt_no,bon_date,agent_message) VALUES ('', '$t_id','$amount', '$eleg_offer', '$alt_no', '$bon_date','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form2 (ticket_id,amount,eleg_offer,alt_no,bon_date,agent_message) VALUES ( '$t_id','$amount', '$eleg_offer', '$alt_no', '$bon_date','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -172,10 +187,12 @@ if (isset($_POST['slave'])){
 		$skill=203;
 		$subject = "FINANCIAL ADJUSTMENTS";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form2 (id,ticket_id,amount,prob,alt_no,agent_message) VALUES ('', '$t_id','$amount', '$problem', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form2 (ticket_id,amount,prob,alt_no,agent_message) VALUES ( '$t_id','$amount', '$problem', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -194,10 +211,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "BILL NOT RECEIVED VIA POST";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form3 (id,ticket_id,address,mod_address,req_bill_month,alt_no,agent_message) VALUES ('', '$t_id','$address', '$mod_address', '$req_bill_month', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form3 (ticket_id,address,mod_address,req_bill_month,alt_no,agent_message) VALUES ( '$t_id','$address', '$mod_address', '$req_bill_month', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -215,10 +234,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "BILL NOT RECEIVED VIA EMAIL";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form3 (id,ticket_id,email,mod_address,req_bill_month,alt_no,agent_message) VALUES ('', '$t_id','$email', '$mod_address', '$req_bill_month', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form3 (ticket_id,email,mod_address,req_bill_month,alt_no,agent_message) VALUES ( '$t_id','$email', '$mod_address', '$req_bill_month', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -235,10 +256,12 @@ if (isset($_POST['slave'])){
 		$skill=101;
 		$subject = "DISTRIBUTOR/RETAILER/SALES MAN COMPLAIN";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form3 (id,ticket_id,date,prob,current_bill,agent_message) VALUES ('', '$t_id','$date', '$prob', '$current_bill','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form3 (ticket_id,date,prob,current_bill,agent_message) VALUES ( '$t_id','$date', '$prob', '$current_bill','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -254,13 +277,15 @@ if (isset($_POST['slave'])){
 		$call_date = $_POST['g1_call_date'];
 		$msisdn = $_POST['g1_customer_MSISDN'];
 		$alt_no = $_POST['g1_alt_no'];
-		$skill=103;
+		$skill=203;
 		$subject = "DISTRIBUTOR/RETAILER/SALES MAN COMPLAIN";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form3 (id,ticket_id,address,prob,call_date,msisdn,alt_no,agent_message) VALUES ('', '$t_id','$address', '$prob', '$call_date', '$msisdn', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form3 (ticket_id,address,prob,call_date,msisdn,alt_no,agent_message) VALUES ( '$t_id','$address', '$prob', '$call_date', '$msisdn', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -283,10 +308,12 @@ if (isset($_POST['slave'])){
 		$alt_no = $_POST['net1_alt_no'];
 		$skill=201;
 		$subject = "ECHO COMPLAINT";
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g201.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -308,13 +335,15 @@ if (isset($_POST['slave'])){
 		$top = $_POST['net2_temp_or_pers'];
 		$signal = $_POST['net2_signal'];
 		$alt_no = $_POST['net2_alt_no'];
-		$skill=104;
+		$skill=204;
 		$subject = "Call Drop Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g204.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -338,10 +367,12 @@ if (isset($_POST['slave'])){
 		$skill=202;
 		$subject = "Outgoing Call Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -365,10 +396,12 @@ if (isset($_POST['slave'])){
 		$skill=202;
 		$subject = "SMS Incoming Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -392,10 +425,12 @@ if (isset($_POST['slave'])){
 		$skill=202;
 		$subject = "SMS Outgoing Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -418,10 +453,12 @@ if (isset($_POST['slave'])){
 		$skill=202;
 		$subject = "Incoming Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,b_msisdn,other_set,spec_time,top,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$b_msisdn', '$other_set', '$spec_time', '$top', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -443,10 +480,12 @@ if (isset($_POST['slave'])){
 		$skill=201;
 		$subject = "Signal Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,other_set,top,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$other_set', '$top', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,other_set,top,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$other_set', '$top', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "mail_g201.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -467,10 +506,12 @@ if (isset($_POST['slave'])){
 		$skill=202;
 		$subject = "ISD Incoming Complaint";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,isd_no,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$isd_no', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,isd_no,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$isd_no', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -490,10 +531,12 @@ if (isset($_POST['slave'])){
 		$skill=201;
 		$subject = "Non Coverage Area";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form1 (id,ticket_id,district,division,thana,loc,signal_str,alt_m,agent_message) VALUES ('', '$t_id', '$district', '$division', '$thana', '$loc', '$signal', '$alt_no','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form1 (ticket_id,district,division,thana,loc,signal_str,alt_m,agent_message) VALUES ( '$t_id', '$district', '$division', '$thana', '$loc', '$signal', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "mail_g201.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -515,10 +558,12 @@ if (isset($_POST['slave'])){
 		$subject = "Unable To Recharge Account";
 		
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(),        '$customer_no', '$subject', '$status', '$agent')";
-		$sql2 = "INSERT INTO form4 (id,ticket_id,recharge_method,card_serial,prob_duration,error_m,loc,prob,date_tried,agent_message) VALUES ('', '$t_id', '$recharge_method', '$card_serial', '$prob_duration', '$error_m', '$loc', '$problem', '$date_tried','$agent_message')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(),        '$customer_no', '$subject', '$status', '$agent')";
+		$sql2 = "INSERT INTO form4 (ticket_id,recharge_method,card_serial,prob_duration,error_m,loc,prob,date_tried,agent_message) VALUES ( '$t_id', '$recharge_method', '$card_serial', '$prob_duration', '$error_m', '$loc', '$problem', '$date_tried','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			////include "mail.php"; 
+			include "send.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -537,10 +582,12 @@ if (isset($_POST['slave'])){
 		$skill=203;
 		$subject = "Payment Not Posted";
 		
-		$sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+		$sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
 		$sql2 = "INSERT INTO form4 (ticket_id,paid_amount,dis_amount,payment_date,payment_method,alt_no,agent_message) VALUES ('$t_id', '$paid_amount', '$dis_amount', '$payment_date', '$pay_method', '$alt_no','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -563,13 +610,15 @@ if (isset($_POST['slave'])){
 		$skill="202";
 		$subject = "Unable to divert/forward calls";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) 
-                VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) 
+                VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         $sql2 = "INSERT INTO form1 (ticket_id,division,district,thana,loc,b_msisdn,other_set,top,signal_str,alt_m,agent_message) 
                  VALUES ('$t_id', '$division', '$district','$thana','$loc','$b_msisdn','$other_set','$top','$signal_str','$alt_m','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -593,13 +642,15 @@ if (isset($_POST['slave'])){
 		$skill="202";
 		$subject = "Unable to Use GPRS";
         
-         $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) 
-                VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+         $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) 
+                VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         $sql2 = "INSERT INTO form1 (ticket_id,division,district,thana,loc,set_m,gprs_pack,prob_duration,alt_m,agent_message) 
                  VALUES ('$t_id', '$division', '$district','$thana','$loc','$phone_model','$gprs_pack','$prob_duration','$alt_m','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g202.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -617,11 +668,13 @@ if (isset($_POST['slave'])){
         $skill="204";
 		$subject = "VAS Activation Complaint";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         $sql2 = "INSERT INTO form1 (ticket_id,vas,cust_veri,shortcode,alt_m,agent_message) VALUES ('$t_id','$vas','$cust_veri','$shortcode','$alt_m','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g204.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -642,14 +695,16 @@ if (isset($_POST['slave'])){
 		$subject = "VAS Deactivation Complaint";
         
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         
         $sql2 = "INSERT INTO form1 (ticket_id,vas,cust_veri,shortcode,alt_name,agent_message)
         
                  VALUES ('$t_id', '$vas', '$cust_veri', '$short_code', '$alt_name','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g204.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -667,14 +722,16 @@ if (isset($_POST['slave'])){
         $skill="204";
 		$subject = "VAS Not Working Complaint";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         
          $sql2 = "INSERT INTO form1 (ticket_id,vas,problem,loc,alt_m,agent_message)
         
                  VALUES ('$t_id','$vas','$prob_desc','$loc','alt_m','$agent_message')";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "mail_g204.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -692,13 +749,15 @@ if (isset($_POST['slave'])){
         $skill="203";
 		$subject = "Delete FNFS";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         $sql2 = "INSERT INTO form1 (ticket_id,current_package,req_fnf,fnf_add_date,alt_m,agent_message)
         
                  VALUES ('$t_id','current_package','req_fnf','fnf_add_date','alt_m','$agent_message' )";
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php";
+			 include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -716,7 +775,7 @@ if (isset($_POST['slave'])){
         $skill="203";
 		$subject = "Postpaid Package plan change complaints";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         
         $sql2 = "INSERT INTO form1 (ticket_id,current_package,desired_pack,effective_date,agent_message)
@@ -724,7 +783,9 @@ if (isset($_POST['slave'])){
                  VALUES ('$t_id','$current_package','$desired_pack','$effective_date','$agent_message')";
         
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -740,7 +801,7 @@ if (isset($_POST['slave'])){
         $skill="203";
 		$subject = "Prepaid Package plan change complaints";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         
          $sql2 = "INSERT INTO form1 (ticket_id,current_package,desired_pack,agent_message)
@@ -748,7 +809,9 @@ if (isset($_POST['slave'])){
                  VALUES ('$t_id','$current_package','$desired_pack','$agent_message' )";
         
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}
@@ -764,7 +827,7 @@ if (isset($_POST['slave'])){
         $skill="203";
 		$subject = "ADD FNFS";
         
-        $sql = "INSERT INTO ticket (id,ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ('', '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
+        $sql = "INSERT INTO ticket (ticket_id,skill_id,start_date,customer_no,subject,status,agent_id) VALUES ( '$t_id', '$skill', now(), '$customer_no', '$subject', '$status', '$agent')";
         
         
         $sql2 = "INSERT INTO form1 (ticket_id,current_package,desired_fnf,agent_message)
@@ -772,7 +835,9 @@ if (isset($_POST['slave'])){
                  VALUES ('$t_id','$current_package','$desired_fnf','$agent_message')";
         
 		if ($conn->query($sql) === TRUE && $conn->query($sql2) === TRUE) {
-			include "mail.php";
+			//include "mail.php"; 
+			include "mail_g203.php";
+header('location:index.php?r=1');
 		} else {
 			echo "Error: " . $sql  . $conn->error;
 		}

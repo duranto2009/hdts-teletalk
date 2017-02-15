@@ -1,5 +1,6 @@
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+<?php 
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -36,10 +37,6 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $closed_ticket = $conn->query($query_closed_ticket) or die(mysql_error());
     $row_closed_ticket = $closed_ticket->fetch_assoc();
     $totalRows_closed_ticket = $closed_ticket->num_rows;
-?>
-<?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
 ?>
 <!DOCTYPE html>
 <html>

@@ -1,8 +1,8 @@
 <?php
 ob_start();
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "hdts";
+$password = "h3lp!d3Sk*16";
 $dbname = "hdts";
 
 // Create connection

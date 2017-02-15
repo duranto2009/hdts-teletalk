@@ -1,6 +1,6 @@
 <?php 
-include '../scripts/Connection/connection.php';
-$ticket= mysqli_real_escape_string($conn, $_POST['t_id']);
+require '../scripts/Connection/connection.php';
+$ticket= $conn->real_escape_string($_POST['t_id']);
 
 		$sql = "SELECT * FROM ticket WHERE ticket_id = '$ticket'";
 		$result = $conn->query($sql);

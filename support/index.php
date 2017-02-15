@@ -1,6 +1,6 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+require '../scripts/islogin.php';
+require '../scripts/Connection/connection.php';
 
 if (isset($_SESSION['username'])) {
 		if ($_SESSION['unit'] != 3){
@@ -8,9 +8,8 @@ if (isset($_SESSION['username'])) {
 		echo "<div style='text-align:center;'><h1>You are not an ADMIM</h1> <h3>You cannot access this page.</h3>";
 	}
 }
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
+
+
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
@@ -18,7 +17,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
     $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
   switch ($theType) {
     case "text":
@@ -132,10 +131,33 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
                             <a href="index.php"> Dashboard</a>
                         </li>
                         <li>
-                            <a href="closed.php?skill=<?php echo $_SESSION['skill'] ?>"> Closed Ticket</a>
-                        </li>
-                        <li>
-                            <a href="#"> Logs</a>
+
+                            <?php
+                              if(isset($_SESSION['username'])){
+                                $user = $_SESSION['username'];
+                                $g_201 = "SELECT * FROM g_201 WHERE username = '$user'";
+                                $g_202 = "SELECT * FROM g_202 WHERE username = '$user'";
+                                $g_203 = "SELECT * FROM g_203 WHERE username = '$user'";
+                                $g_204 = "SELECT * FROM g_204 WHERE username = '$user'";
+                                $result1 = $conn->query($g_201);
+                                $result2 = $conn->query($g_202);
+                                $result3 = $conn->query($g_203);
+                                $result4 = $conn->query($g_204);
+                                
+                                if ($result1->num_rows == 1) { 
+                                  echo '<a href="closed.php?skill=201">Closed Ticket</a>';
+                                }
+                                if ($result2->num_rows == 1) {
+                                  echo '<a href="closed.php?skill=202">Closed Ticket</a>';
+                                }
+                                if ($result3->num_rows == 1) {
+                                  echo '<a href="closed.php?skill=203">Closed Ticket</a>';
+                                }
+                                if ($result4->num_rows == 1) {
+                                  echo '<a href="closed.php?skill=204">Closed Ticket</a>';
+                                }
+                              }
+                            ?>
                         </li>
                     </ul>
                 </div>
@@ -202,7 +224,7 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
                 </div>
             </div>
           </div>
-      <hr>
+          <hr>
             <footer>
                 <p>&copy; Digicon Technologies Limited, <?php echo date("Y"); ?></p>
             </footer>
@@ -212,15 +234,8 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
         <script src="../vendors/jquery-1.9.1.js"></script>
         <script src="../bootstrap/js/bootstrap.min.js"></script>
         <script src="../vendors/datatables/js/jquery.dataTables.min.js"></script>
-
-
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
     </body>
 
 </html>

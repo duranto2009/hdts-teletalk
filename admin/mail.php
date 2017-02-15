@@ -1,5 +1,6 @@
 <?php
-include '../scripts/Connection/connection.php'; 
+require ('../scripts/islogin.php');
+require ('../scripts/Connection/connection.php');
 require '../PHP-email/PHPMailerAutoload.php';
 
 $mail = new PHPMailer;

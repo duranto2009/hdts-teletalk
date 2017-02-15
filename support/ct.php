@@ -1,149 +1,214 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
-$sql = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
-$res = $conn->query($sql);
-$num = mysqli_num_rows($res);
-?>
-<?php require_once('../Connections/conn.php'); ?>
-<?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+ require '../scripts/islogin.php';
+  require '../scripts/Connection/connection.php';
+  $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
+  $res = $conn->query($sql);
+  $num = $res->num_rows;
+
+  // ** Logout the current user. **
+  $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+  if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+    $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+  if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+    //to fully log out a visitor we need to clear the session varialbles
+    $_SESSION['MM_Username'] = NULL;
+    $_SESSION['MM_UserGroup'] = NULL;
+    $_SESSION['PrevUrl'] = NULL;
+    unset($_SESSION['MM_Username']);
+    unset($_SESSION['MM_UserGroup']);
+    unset($_SESSION['PrevUrl']);
+    
+    $logoutGoTo = "../login.php";
+    if ($logoutGoTo) {
+      header("Location: $logoutGoTo");
+      exit;
+    }
   }
-  return $theValue;
-}
-}
 
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-$username = $_SESSION['username'];
-$date = date('Y-m-d H:i:s');
-$t_id = $_GET['_t'];
 
-if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "close")) {
-  $updateSQL = sprintf("UPDATE ticket SET status=1 WHERE ticket_id='$t_id'",
-                       GetSQLValueString($_POST['status'], "int"),
-                       GetSQLValueString($_POST['status'], "text"));
+
+  if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
+
+    //$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+  }
+
+  $editFormAction = $_SERVER['PHP_SELF'];
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+  }
+
+  $editFormAction = $_SERVER['PHP_SELF'];
+
+  $username = $_SESSION['username'];
+  $date = date('Y-m-d').time('H:i:s');
+  $t_id = $_GET['_t'];
+
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+  }
+
+  if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "comment")) {
+    $insertSQL = sprintf("INSERT INTO ticket_status (ticket_id,comment,date,username) VALUES ('$t_id',%s,now(),'$username')",
+                         GetSQLValueString($_POST['comment'], "text"));
+
+
+    //mysql_select_db($database_conn, $conn);
+    $Result1 =  $conn->query($insertSQL) or die(mysql_error());
+
+
+  }
+
+  if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "close")) {
+    $updateSQL = sprintf("UPDATE ticket SET status=1 WHERE ticket_id='$t_id'",
+                         GetSQLValueString($_POST['status'], "int"),
+                         GetSQLValueString($_POST['status'], "text"));
+
+
+
+    //mysql_select_db($database_conn, $conn);
+    $Result1 =  $conn->query($updateSQL) or die(mysql_error());
+
+
+
+    $updateGoTo = "index.php";
+    if (isset($_SERVER['QUERY_STRING'])) {
+      $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
+      $updateGoTo .= $_SERVER['QUERY_STRING'];
+    }
+    header(sprintf("Location: %s", $updateGoTo));
+  }
+
+  $colname_search_assignee = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_search_assignee = $_GET['_t'];
+  }
 
 
   //mysql_select_db($database_conn, $conn);
-  $Result1 =  $conn->query($updateSQL) or die(mysql_error());
+  $query_search_assignee = sprintf("SELECT * FROM assignee WHERE ticket_id = %s", GetSQLValueString($colname_search_assignee, "text"));
+  $search_assignee = $conn->query($query_search_assignee) or die(mysql_error());
+  $row_search_assignee = $search_assignee->fetch_assoc();
+  $totalRows_search_assignee = $search_assignee->num_rows;
 
 
-  $updateGoTo = "spoc.php?skill=".$_GET['skill']."";
-  if (isset($_SERVER['QUERY_STRING'])) {
-    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
-    $updateGoTo .= $_SERVER['QUERY_STRING'];
+
+  $colname_query_ticket = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_query_ticket = $_GET['_t'];
   }
-  header(sprintf("Location: %s", $updateGoTo));
-}
-
-$colname_query_ticket = "-1";
-if (isset($_GET['_t'])) {
-  $colname_query_ticket = $_GET['_t'];
-}
 
 
-//mysql_select_db($database_conn, $conn);
-$query_query_ticket = sprintf("SELECT * FROM ticket WHERE ticket_id = %s", GetSQLValueString($colname_query_ticket, "text"));
-$query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
-$row_query_ticket = $query_ticket->fetch_assoc();
-$totalRows_query_ticket = $query_ticket->num_rows;
+  //mysql_select_db($database_conn, $conn);
+  $query_query_ticket = sprintf("SELECT * FROM ticket WHERE ticket_id = %s", GetSQLValueString($colname_query_ticket, "text"));
+  $query_ticket =  $conn->query($query_query_ticket) or die(mysql_error());
+  $row_query_ticket = $query_ticket->fetch_assoc();
+  $totalRows_query_ticket = $query_ticket->num_rows;
 
 
 
-$colname_query_progress = "-1";
-if (isset($_GET['_t'])) {
-  $colname_query_progress = $_GET['_t'];
-}
+  $colname_query_progress = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_query_progress = $_GET['_t'];
+  }
 
 
-//mysql_select_db($database_conn, $conn);
-$query_query_progress = sprintf("SELECT * FROM progress WHERE ticket_id = %s ORDER BY id DESC", GetSQLValueString($colname_query_progress, "int"));
-$query_progress =  $conn->query($query_query_progress) or die(mysql_error());
-$row_query_progress = $query_progress->fetch_assoc();
-$totalRows_query_progress = $query_progress->num_rows;
+  //mysql_select_db($database_conn, $conn);
+  $query_query_progress = sprintf("SELECT progress FROM progress WHERE ticket_id = %s ORDER BY `date` DESC", GetSQLValueString($colname_query_progress, "text"));
+  $query_progress =  $conn->query($query_query_progress) or die(mysql_error());
+  $row_query_progress = $query_progress->fetch_assoc();
+  $totalRows_query_progress = $query_progress->num_rows;
 
 
+  //mysql_select_db($database_conn, $conn);
+  $query_ticket_status = sprintf("SELECT * FROM ticket_status WHERE ticket_id = '$t_id' ORDER BY date ASC");
+  $ticket_status =  $conn->query($query_ticket_status) or die(mysql_error());
+  $row_ticket_status = $ticket_status->fetch_assoc();
+  $totalRows_ticket_status = $ticket_status->num_rows;
 
 
-//mysql_select_db($database_conn, $conn);
-$query_ticket_status = sprintf("SELECT * FROM ticket_status WHERE ticket_id = '$t_id' ORDER BY date ASC");
-$ticket_status =  $conn->query($query_ticket_status) or die(mysql_error());
-$row_ticket_status = $ticket_status->fetch_assoc();
-$totalRows_ticket_status = $ticket_status->num_rows;
+  $colname_form1_search = "-1";
+  if (isset($_GET['_t'])) {
+    $colname_form1_search = $_GET['_t'];
+  }
 
 
-
-//mysql_select_db($database_conn, $conn);
-$query_usre = "SELECT * FROM user WHERE skill_id = ".$row_query_ticket['skill_id']."";
-$usre = $conn->query($query_usre) or die(mysql_error());
-$row_usre = $usre->fetch_assoc();
-$totalRows_usre = $usre->num_rows;
-
-
-
-$colname_status = "-1";
-if (isset($_GET['_t'])) {
-  $colname_status = $_GET['_t'];
-}
-
-
-//mysql_select_db($database_conn, $conn);
-$query_status = sprintf("SELECT * FROM ticket_status WHERE ticket_id = %s", GetSQLValueString($colname_status, "text"));
-$status =  $conn->query($query_status) or die(mysql_error());
-$row_status = $status->fetch_assoc();
-$totalRows_status = $status->num_rows;
+  //mysql_select_db($database_conn, $conn);
+  $query_form1_search = "SELECT * FROM form1 WHERE ticket_id = '$t_id'";
+  $form1_search =  $conn->query($query_form1_search) or die(mysql_error());
+  $row_form1_search = $form1_search->fetch_assoc();
+  $totalRows_form1_search = $form1_search->num_rows;
 
 
 
-$colname_assignee = "-1";
-if (isset($_GET['_t'])) {
-  $colname_assignee = $_GET['_t'];
-}
+  //mysql_select_db($database_conn, $conn);
+  $query_form2_search = "SELECT * FROM form2 WHERE ticket_id = '$t_id'";
+  $form2_search =  $conn->query($query_form2_search) or die(mysql_error());
+  $row_form2_search = $form2_search->fetch_assoc();
+  $totalRows_form2_search = $form2_search->num_rows;
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form3_search = "SELECT * FROM form3 WHERE ticket_id = '$t_id'";
+  $form3_search =  $conn->query($query_form3_search) or die(mysql_error());
+  $row_form3_search = $form3_search->fetch_assoc();
+  $totalRows_form3_search = $form3_search->num_rows;
+
+  //mysql_select_db($database_conn, $conn);
+  $query_form4_search = "SELECT * FROM form4 WHERE ticket_id = '$t_id'";
+  $form4_search =  $conn->query($query_form4_search) or die(mysql_error());
+  $row_form4_search = $form4_search->fetch_assoc();
+  $totalRows_form4_search = $form4_search->num_rows;
+
+  if (isset($_GET['ins'])){
+  $ins = $_GET['ins'];
 
 
-//mysql_select_db($database_conn, $conn);
-$query_assignee = sprintf("SELECT * FROM assignee WHERE ticket_id = %s", GetSQLValueString($colname_assignee, "text"));
-$assignee =  $conn->query($query_assignee) or die(mysql_error());
-$row_assignee = $assignee->fetch_assoc();
-$totalRows_assignee = $assignee->num_rows;
+  //mysql_select_db($database_conn, $conn);
+  $query_message_view = "SELECT * FROM message WHERE instance = '$ins'";
+  $message_view =  $conn->query($query_message_view) or die(mysql_error());
+  $row_message_view = $message_view->fetch_assoc();
+  $totalRows_message_view = $message_view->num_rows;
+
+
+  }
+
+
+  //mysql_select_db($database_conn, $conn);
+  $query_closed_ticket = "SELECT * FROM ticket WHERE ticket.status = 2 AND skill_id = ".$_GET['skill']."";
+  $closed_ticket =  $conn->query($query_closed_ticket) or die(mysql_error());
+  $row_closed_ticket = $closed_ticket->fetch_assoc();
+  $totalRows_closed_ticket = $closed_ticket->num_rows;
 
 
 
-//mysql_select_db($database_conn, $conn);
-$query_notification = "SELECT * FROM assignee WHERE username = '$username' AND viewed=0 ORDER BY date DESC";
-$notification =  $conn->query($query_notification) or die(mysql_error());
-$row_notification = $notification->fetch_assoc();
-$totalRows_notification = $notification->num_rows;
-
-
+  require 'getmessage.php';
 ?>
 
 <!DOCTYPE html>
@@ -227,9 +292,6 @@ $totalRows_notification = $notification->num_rows;
                         <li class="active">
                             <a href="closed.php?skill=<?php echo $_GET['skill']; ?>"><span class="badge badge-warning pull-right"><?php echo $num; ?></span> Closed Tickets</a>
                         </li>
-                        <li>
-                            <a href="#"> Logs</a>
-                        </li>
                     </ul>
                 </div>
                 <!--/span-->
@@ -245,11 +307,238 @@ $totalRows_notification = $notification->num_rows;
                                 <h3><?php echo $row_query_ticket['subject']; ?></h3>
                                 <span style="font-size:14px"><b>MSISDN#</b> 
                                 <span style="color:#006"><u>0<?php echo $row_query_ticket['customer_no']; ?></u></span>
-                                <p style="text-align:right"><em>Created on:</em> <?php echo $row_query_ticket['start_date']; ?></p
-                                ><hr>
-                                <p style="text-align:justify">
-                                <?php echo $row_query_ticket['prob_desc']; ?>
-                                </p>
+                                <p style="text-align:right"><em>Created on:</em> <?php echo $row_query_ticket['start_date']; ?></p>
+                                <p style="text-align:right"><em>Closed on:</em> <b style="color:#C33"><?php echo $row_query_ticket['close_date']; ?></b></p>
+                                <hr>
+                                                                <div class="span12">
+                                <table style="font-weight:bold; text-align:right" cellpadding="2px">
+                                <?php 
+                  if ($totalRows_form1_search>0){
+                    echo "<tr><td style='color:#698975'>Ticket <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['ticket_id']."</td><tr>";
+                    if ($row_form1_search['division'] != NULL){
+                      echo "<tr><td style='color:#698975'>Division <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['division']."</td><tr>";
+                    }
+                    if ($row_form1_search['district'] != NULL){
+                      echo "<tr><td style='color:#698975'>District <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['district']."</td><tr>";
+                    }
+                    if ($row_form1_search['thana'] != NULL){
+                      echo "<tr><td style='color:#698975'>Thana <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['thana']."</td><tr>";
+                    }
+                    if ($row_form1_search['loc'] != NULL){
+                      echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['loc']."</td><tr>";
+                    }
+                    if ($row_form1_search['problem'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['problem']."</td><tr>";
+                    }
+                    if ($row_form1_search['set_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Hand Set Model No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['set_m']."</td><tr>";
+                    }
+                    if ($row_form1_search['error_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['error_m']."</td><tr>";
+                    }
+                    if ($row_form1_search['alt_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_m']."</td><tr>";
+                    }
+                                        if ($row_form1_search['3g_pac'] != NULL){
+                      echo "<tr><td style='color:#698975'>3G Pack <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['3g_pac']."</td><tr>";
+                    }
+                                        if ($row_form1_search['b_msisdn'] != NULL){
+                      echo "<tr><td style='color:#698975'>B-Part Mobile Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['b_msisdn']."</td><tr>";
+                    }
+                                        if ($row_form1_search['other_set'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem with other set <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['other_set']."</td><tr>";
+                    }
+                                        if ($row_form1_search['signal_str'] != NULL){
+                      echo "<tr><td style='color:#698975'>Signal Strength <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['signal_str']."</td><tr>";
+                    }
+                                        if ($row_form1_search['top'] != NULL){
+                      echo "<tr><td style='color:#698975'>Temporary or Persistent? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['top']."</td><tr>";
+                    }
+                                        if ($row_form1_search['spec_time'] != NULL){
+                      echo "<tr><td style='color:#698975'>Any Specific Time? <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['spec_time']."</td><tr>";
+                    }
+                                        if ($row_form1_search['isd_no'] != NULL){
+                      echo "<tr><td style='color:#698975'>ISD No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['isd_no']."</td><tr>";
+                    }
+                    if ($row_form1_search['gprs_pack'] != NULL){
+                      echo "<tr><td style='color:#698975'>GPRS Pack Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['gprs_pack']."</td><tr>";
+                    }
+                    if ($row_form1_search['prob_duration'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['prob_duration']."</td><tr>";
+                    }
+                    if ($row_form1_search['vas'] != NULL){
+                      echo "<tr><td style='color:#698975'>VAS <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['vas']."</td><tr>";
+                    }
+                    if ($row_form1_search['cust_veri'] != NULL){
+                      echo "<tr><td style='color:#698975'>Customer Verification <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['cust_veri']."</td><tr>";
+                    }
+                    if ($row_form1_search['shortcode'] != NULL){
+                      echo "<tr><td style='color:#698975'>Short Code <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['shortcode']."</td><tr>";
+                    }
+                    if ($row_form1_search['alt_name'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Name <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['alt_name']."</td><tr>";
+                    }
+                    if ($row_form1_search['current_package'] != NULL){
+                      echo "<tr><td style='color:#698975'>Current Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['current_package']."</td><tr>";
+                    }
+                    if ($row_form1_search['req_fnf'] != NULL){
+                      echo "<tr><td style='color:#698975'>Required FNF <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['req_fnf']."</td><tr>";
+                    }
+                    if ($row_form1_search['fnf_add_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>FNF add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['fnf_add_date']."</td><tr>";
+                    }
+                    if ($row_form1_search['desired_pack'] != NULL){
+                      echo "<tr><td style='color:#698975'>Desired Package <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['desired_pack']."</td><tr>";
+                    }
+                    if ($row_form1_search['effective_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Effective Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['effective_date']."</td><tr>";
+                    }
+                    if ($row_form1_search['desired_fnf'] != NULL){
+                      echo "<tr><td style='color:#698975'>Desired FNF <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['desired_fnf']."</td><tr>";
+                    }
+                    if ($row_form1_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form1_search['agent_message']."</td><tr>";
+                    }
+                  } 
+                  // Form 2
+                  
+                  elseif ($totalRows_form2_search>0){
+                    if ($row_form2_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form2_search['fnf_d'] != NULL){
+                      echo "<tr><td style='color:#698975'>Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
+                    }
+                                        if ($row_form2_search['fnf'] != NULL){
+                      echo "<tr><td style='color:#698975'>FNF No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf']."</td><tr>";
+                    }
+                                        if ($row_form2_search['fnf_d'] != NULL){
+                      echo "<tr><td style='color:#698975'>FNF Add Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['fnf_d']."</td><tr>";
+                    }
+                                        if ($row_form2_search['overc_p'] != NULL){
+                      echo "<tr><td style='color:#698975'>Overcharged Period <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['overc_p']."</td><tr>";
+                    }
+                                        if ($row_form2_search['prob'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['prob']."</td><tr>";
+                    }
+                                        if ($row_form2_search['eleg_offer'] != NULL){
+                      echo "<tr><td style='color:#698975'>Elegible for (OFFER) <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['eleg_offer']."</td><tr>";
+                    } 
+                                        if ($row_form2_search['alt_no'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['alt_no']."</td><tr>";
+                    }
+                                        if ($row_form2_search['bon_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Bonus Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['bon_date']."</td><tr>";
+                    }
+                    if ($row_form2_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form2_search['agent_message']."</td><tr>";
+                    }
+                  }
+                    
+                    // Form 3
+                    elseif ($totalRows_form3_search>0){
+                    if ($row_form3_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form3_search['address'] != NULL){
+                      echo "<tr><td style='color:#698975'>Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['address']."</td><tr>";
+                    }
+                                        if ($row_form3_search['req_bill_month'] != NULL){
+                      echo "<tr><td style='color:#698975'>Requested Bill Month <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['req_bill_month']."</td><tr>";
+                    }
+                                        if ($row_form3_search['mod_address'] != NULL){
+                      echo "<tr><td style='color:#698975'>Modified Address <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['mod_address']."</td><tr>";
+                    }
+                                        if ($row_form3_search['alt_no'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Contact <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['alt_no']."</td><tr>";
+                    }
+                                        if ($row_form3_search['email'] != NULL){
+                      echo "<tr><td style='color:#698975'>Email <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['email']."</td><tr>";
+                    }
+                                        if ($row_form3_search['date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['date']."</td><tr>";
+                    } 
+                                        if ($row_form3_search['call_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Date of Call <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['call_date']."</td><tr>";
+                    }
+                                        if ($row_form3_search['prob'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Description <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
+                    }
+                                        if ($row_form3_search['current_bill'] != NULL){
+                      echo "<tr><td style='color:#698975'>Current Bill <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['current_bill']."</td><tr>";
+
+                    }
+                                        if ($row_form3_search['msisdn'] != NULL){
+                      echo "<tr><td style='color:#698975'>MSISDN <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['msisdn']."</td><tr>";
+                    }
+                    if ($row_form3_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form3_search['agent_message']."</td><tr>";
+                    }
+                  }
+                  
+                  // Form 4
+                    elseif ($totalRows_form4_search>0){
+                    if ($row_form4_search['ticket_id'] != NULL){
+                      echo "<tr><td style='color:#698975'>Ticket No. <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['ticket_id']."</td><tr>";
+                    }
+                    if ($row_form4_search['recharge_method'] != NULL){
+                      echo "<tr><td style='color:#698975'>Recharge Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['recharge_method']."</td><tr>";
+                    }
+                                        if ($row_form4_search['card_serial'] != NULL){
+                      echo "<tr><td style='color:#698975'>Card Serial Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['card_serial']."</td><tr>";
+                    }
+                                        if ($row_form4_search['prob_duration'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem Duration <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob_duration']."</td><tr>";
+                    }
+                                        if ($row_form4_search['error_m'] != NULL){
+                      echo "<tr><td style='color:#698975'>Error Message <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['error_m']."</td><tr>";
+                    }
+                                        if ($row_form4_search['loc'] != NULL){
+                      echo "<tr><td style='color:#698975'>Location <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['loc']."</td><tr>";
+                    }
+                                        if ($row_form4_search['prob'] != NULL){
+                      echo "<tr><td style='color:#698975'>Problem <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['prob']."</td><tr>";
+                    } 
+                                        if ($row_form4_search['date_tried'] != NULL){
+                      echo "<tr><td style='color:#698975'>Date Tried <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['date_tried']."</td><tr>";
+                    }
+                                        if ($row_form4_search['paid_amount'] != NULL){
+                      echo "<tr><td style='color:#698975'>Paid Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['paid_amount']."</td><tr>";
+                    }
+                                        if ($row_form4_search['dis_amount'] != NULL){
+                      echo "<tr><td style='color:#698975'>Discount Amount <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['dis_amount']."</td><tr>";
+                    }
+                                        if ($row_form4_search['payment_date'] != NULL){
+                      echo "<tr><td style='color:#698975'>Payment Date <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_date']."</td><tr>";
+                    }
+                    if ($row_form4_search['payment_method'] != NULL){
+                      echo "<tr><td style='color:#698975'>Payment Method <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['payment_method']."</td><tr>";
+                    }
+                    if ($row_form4_search['alt_no'] != NULL){
+                      echo "<tr><td style='color:#698975'>Alternate Number <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['alt_no']."</td><tr>";
+                    }
+                    if ($row_form4_search['agent_message'] != NULL){
+                      echo "<tr><td style='color:#698975'>Agent's Wrap Up <i class='icon-share-alt'></i> </td><td style='text-align:left'>&nbsp".$row_form4_search['agent_message']."</td><tr>";
+                    }
+                  }
+                ?>
+                                </table>
+                                <div class="block-content collapse in">
+                              <?php 
+                if ($totalRows_ticket_status>0){
+                do { ?>
+                              <div class="span10" style="margin:5px; background:#0093B1; border-radius:5px">
+                                  <div style="padding:10px">
+                                    <h6 style="color:#333;"><em style="color:white"><?php echo $row_ticket_status['username']; ?></em>  on 
+                                      <span style="color:#EDD664; text-align:right"><?php echo $row_ticket_status['date']; ?></span> </h6>
+                                    <p style="text-align:justify;color:#FFE6CC;font-weight:bold; font-stretch:expanded"><?php echo $row_ticket_status['comment']; ?></p>
+                                  </div>
+                              </div>
+                                <?php } while ($row_ticket_status = $ticket_status->fetch_assoc());
+                }
+                 ?>
+                             </div>
+                                </div>
                                 </div>
                             
                                 
@@ -305,20 +594,15 @@ $totalRows_notification = $notification->num_rows;
 
         <script src="../assets/scripts.js"></script>
         <script src="../assets/DT_bootstrap.js"></script>
-        <script>
-        $(function() {
-            
-        });
-        </script>
         
         <!--/.fluid-container-->
         <script src="../vendors/bootstrap-wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
+    		<script src="../vendors/bootstrap-wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
-		<script src="../vendors/ckeditor/ckeditor.js"></script>
-		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
+    		<script src="../vendors/ckeditor/ckeditor.js"></script>
+    		<script src="../vendors/ckeditor/adapters/jquery.js"></script>
 
-		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
+    		<script type="text/javascript" src="../vendors/tinymce/js/tinymce/tinymce.min.js"></script>
         <script>
         $(function() {
             // Bootstrap

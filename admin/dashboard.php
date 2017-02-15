@@ -1,6 +1,6 @@
 <?php
-include '../scripts/islogin.php';
-include '../scripts/Connection/connection.php';
+ require '../scripts/islogin.php';
+ require '../scripts/Connection/connection.php';
 $sql = "SELECT * FROM ticket WHERE ticket.status = 2";
 $res = $conn->query($sql);
 $num = $res->num_rows;
@@ -12,7 +12,6 @@ if (isset($_SESSION['username'])) {
 	}
 }
 ?>
-<?php require_once('../Connections/conn.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -133,6 +132,8 @@ $totalRows_query_ticket = $query_ticket->num_rows;
                                                 <th>Date</th>
                                               	<th>Status</th>
                                                 <th>Action</th>
+						<th>SKILL ID</th>
+<th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -160,6 +161,8 @@ $totalRows_query_ticket = $query_ticket->num_rows;
 													?>
                                              
                                              </td>
+					<td><?php echo $row_query_ticket['skill_id']; ?></td>
+	                                <td><?php echo $row_query_ticket['status']; ?></td>
                                           </tr>
                                             <?php } while ($row_query_ticket = $query_ticket->fetch_assoc()); ?>
                                         </tbody>

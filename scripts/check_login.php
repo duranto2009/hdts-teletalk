@@ -1,6 +1,7 @@
 <?php
+
 session_start();
-include 'Connection/connection.php';
+require 'Connection/connection.php';
 include 'echo_loggin_failed.php';
 // username and password sent from form 
 $username=$_POST['username'];
@@ -9,57 +10,58 @@ $date = date("Y-m-d h:i:s");
 // To protect MySQL injection
 $username = stripslashes($username);
 $password = stripslashes($password);
-$username = mysql_real_escape_string($username);
-$password = mysql_real_escape_string($password);
+$username = $conn->real_escape_string($username);
+$password = $conn->real_escape_string($password);
 $sql="SELECT * FROM user WHERE username='$username' AND password='$password'";
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
-// Mysql_num_row is counting table row
-if ($result->num_rows == 1 && $row['unit'] == 0) {
-// Register $username, $password and redirect to file "login_success.php"
-$_SESSION['username']=$username;
-$_SESSION['password']=$password;
-$_SESSION['full_name']=$row['full_name'];
-$_SESSION['skill']=$row['skill_id'];
-$_SESSION['unit']=$row['unit'];
-$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
-$result2 = $conn->query($sql2);
-header("location:../agent/index.php");	
+	// Mysql_num_row is counting table row
+	if ($result->num_rows == 1 && $row['unit'] == 0) {
+	// Register $username, $password and redirect to file "login_success.php"
+	$_SESSION['username']=$username;
+	$_SESSION['password']=$password;
+	$_SESSION['full_name']=$row['full_name'];
+	$_SESSION['skill']=$row['skill_id'];
+	$_SESSION['unit']=$row['unit'];
+	$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
+	$result2 = $conn->query($sql2);
+	header("location:../agent/index.php");	
 }
 elseif ($result->num_rows == 1 && $row['unit'] == 1) {
-// Register $username, $password and redirect to file "login_success.php"
-$_SESSION['username']=$username;
-$_SESSION['password']=$password;
-$_SESSION['full_name']=$row['full_name'];
-$_SESSION['skill']=$row['skill_id'];
-$_SESSION['unit']=$row['unit'];
-$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
-$result2 = $conn->query($sql2);
-header("location:../admin/dashboard.php");	
+	// Register $username, $password and redirect to file "login_success.php"
+	$_SESSION['username']=$username;
+	$_SESSION['password']=$password;
+	$_SESSION['full_name']=$row['full_name'];
+	$_SESSION['skill']=$row['skill_id'];
+	$_SESSION['unit']=$row['unit'];
+	$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
+	$result2 = $conn->query($sql2);
+	header("location:../admin/dashboard.php");	
 } 
 elseif ($result->num_rows == 1 && $row['unit'] == 2) {
-// Register $username, $password and redirect to file "login_success.php"
-$_SESSION['username']=$username;
-$_SESSION['password']=$password;
-$_SESSION['full_name']=$row['full_name'];
-$_SESSION['skill']=$row['skill_id'];
-$_SESSION['unit']=$row['unit'];
-$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
-$result2 = $conn->query($sql2);
-header("location:../SPOC/index.php?skill=".$row['skill_id']."");	
+	// Register $username, $password and redirect to file "login_success.php"
+	$_SESSION['username']=$username;
+	$_SESSION['password']=$password;
+	$_SESSION['full_name']=$row['full_name'];
+	$_SESSION['skill']=$row['skill_id'];
+	$_SESSION['unit']=$row['unit'];
+	$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
+	$result2 = $conn->query($sql2);
+	header("location:../SPOC/index.php?skill=".$row['skill_id']."");	
 } 
 elseif ($result->num_rows == 1 && $row['unit'] == 3) {
-// Register $username, $password and redirect to file "login_success.php"
-$_SESSION['username']=$username;
-$_SESSION['password']=$password;
-$_SESSION['full_name']=$row['full_name'];
-$_SESSION['skill']=$row['skill_id'];
-$_SESSION['unit']=$row['unit'];
-$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
-$result2 = $conn->query($sql2);
-header("location:../support/index.php?skill=".$row['skill_id']."");	
+	// Register $username, $password and redirect to file "login_success.php"
+	$_SESSION['username']=$username;
+	$_SESSION['password']=$password;
+	$_SESSION['full_name']=$row['full_name'];
+	$_SESSION['skill']=$row['skill_id'];
+	$_SESSION['unit']=$row['unit'];
+	$sql2= "INSERT INTO sys_log (username, logintime) VALUES ('$username', '$date')";
+	$result2 = $conn->query($sql2);
+	header("location:../support/index.php?skill=".$row['skill_id']."");	
 } 
 else{
 	header("location:../login.php?r=error");
+	//error_reporting(E_ALL);
 }
 ?>
